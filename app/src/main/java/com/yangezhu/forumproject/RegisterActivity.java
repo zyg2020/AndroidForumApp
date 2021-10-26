@@ -3,6 +3,7 @@ package com.yangezhu.forumproject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -38,6 +39,8 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     FirebaseFirestore firestore;
 
+    ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +55,8 @@ public class RegisterActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
+        progressDialog = new ProgressDialog(this);
+
         register_btn.setOnClickListener(view -> {
             String txt_username = username.getText().toString();
             String txt_name = name.getText().toString();
@@ -63,12 +68,16 @@ public class RegisterActivity extends AppCompatActivity {
             }else if (txt_password.length() < 5){
                 Toast.makeText(RegisterActivity.this, "Password too short!!!", Toast.LENGTH_SHORT).show();
             }else{
+                progressDialog.setMessage("Please Wait!");
+                progressDialog.show();
                 registerUser(txt_username, txt_name, txt_email, txt_password);
             }
         });
     }
 
     private void registerUser(String txt_username, String txt_name, String txt_email, String txt_password) {
+
+
         CollectionReference users_collection = firestore.collection("users");
         Query query = users_collection.whereEqualTo("username", txt_username);
 
@@ -105,6 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         Toast.makeText(RegisterActivity.this, "Successfully save username, email, name after creating a user account.", Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(RegisterActivity.this , InitialLoginActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        progressDialog.dismiss();
                                         startActivity(intent);
                                         finish();
                                     }
@@ -123,5 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
+        progressDialog.dismiss();
     }
 }

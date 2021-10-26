@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.yangezhu.forumproject.R;
@@ -68,7 +69,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        EditText initial_edit_text = view.findViewById(R.id.initial_message);
+        TextView initial_edit_text = view.findViewById(R.id.initial_message);
         initial_edit_text.setText(auth.getCurrentUser().getUid());
 
         return view;
