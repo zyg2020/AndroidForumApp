@@ -7,36 +7,57 @@
     android:padding="12dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InitialLoginActivity">
+    tools:context=".RegisterActivity">
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="150dp"
+        android:layout_height="130dp"
         android:src="@drawable/ic_logo_forum"/>
 
     <EditText
+        android:id="@+id/username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:hint="Username"
+        android:minHeight="48dp"
+        android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:hint="Name"
+        android:minHeight="48dp"
+        android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:hint="Email"
-        android:padding="10dp"
-        android:id="@+id/email"/>
+        android:minHeight="48dp"
+        android:padding="10dp" />
 
     <EditText
+        android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:hint="Password"
-        android:padding="10dp"
-        android:id="@+id/password"/>
+        android:minHeight="48dp"
+        android:padding="10dp" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15sp"
-        android:text="LOGIN"
+        android:text="REGISTER"
         android:padding="10dp"
-        android:id="@+id/login"/>
+        android:id="@+id/register"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,7 +67,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New to Instagram? Register"
+            android:text="Already a user? LogIn"
             android:layout_marginTop="15dp"
             android:id="@+id/register_user"
             android:layout_gravity="center"/>
@@ -58,6 +79,5 @@
             android:layout_marginTop="15dp"
             android:layout_marginLeft="8dp"/>
     </LinearLayout>
-
 
 </LinearLayout>
