@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "947906805793",
+    "project_id": "fir-exploration-8b0aa",
+    "storage_bucket": "fir-exploration-8b0aa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947906805793:android:ea1a7617ab8c3b5b96e360",
+        "android_client_info": {
+          "package_name": "com.yangezhu.forumproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "947906805793-k2id79arq8b7ke4f6h9cet2vqttdbn4e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0lj4y-UJvV1TsI8zueWqS4kGcBD1OYEI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "947906805793-k2id79arq8b7ke4f6h9cet2vqttdbn4e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -13,10 +13,10 @@ public class InitialLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial_login);
 
-//        Button btn = findViewById();
-//
-//        btn.setOnClickListener(view -> {
-//            startActivity(new Intent(this, MainActivity.class));
-//        });
+        Button btn_to_register_activity = findViewById(R.id.btn_to_register_activity);
+
+        btn_to_register_activity.setOnClickListener(view -> {
+            startActivity(new Intent(this, RegisterActivity.class));
+        });
     }
 }
