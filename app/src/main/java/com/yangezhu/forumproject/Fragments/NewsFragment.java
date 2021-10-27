@@ -1,5 +1,6 @@
 package com.yangezhu.forumproject.Fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -9,11 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
 import com.yangezhu.forumproject.R;
 import com.yangezhu.forumproject.RSSParseHandler;
+import com.yangezhu.forumproject.adapter.NewsAdapter;
 import com.yangezhu.forumproject.model.News;
 
 import org.xml.sax.SAXException;
@@ -83,7 +86,10 @@ public class NewsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_news, container, false);
+        View view = inflater.inflate(R.layout.fragment_news, container, false);
+
+
+        return view;
     }
 
     private class DownloadAndParseRSS extends AsyncTask<String, Void, Void> {
@@ -127,12 +133,24 @@ public class NewsFragment extends Fragment {
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
 
-//            ListView mListView = findViewById(R.id.lv_main_list_view);
-//
-//            NewsListAdapter newsListAdapter = new NewsListAdapter(ListNewsActivity.this, R.layout.news_layout, newsList);
-//
-//            mListView.setAdapter(newsListAdapter);
-//            mListView.setOnItemClickListener(newsClick);
+            ListView mListView = (ListView) getView().findViewById(R.id.lv_news_fragment_list_view);
+
+            NewsAdapter newsListAdapter = new NewsAdapter(getContext(), R.layout.news_layout, newsList);
+
+            mListView.setAdapter(newsListAdapter);
+            mListView.setOnItemClickListener(newsClick);
         }
     }
+
+    AdapterView.OnItemClickListener newsClick = (adapterView, view, position, id) -> {
+        News news = (News) adapterView.getItemAtPosition(position);
+        Log.d("ZHU_JSON_MSG", news.toString());
+
+//            Intent intent = new Intent(ListNewsActivity.this, ShowNewsDetailsActivity.class);
+//            Gson gson = new Gson();
+//            String stringifiedNews = gson.toJson(news);
+//            intent.putExtra(SELECTED_NEWS, stringifiedNews);
+//
+//            ListNewsActivity.this.startActivity(intent);
+    };
 }

@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"/>
 
     <ListView
-        android:id="@+id/lv_main_list_view"
+        android:id="@+id/lv_news_fragment_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/title"
