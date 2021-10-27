@@ -1,14 +1,32 @@
 package com.yangezhu.forumproject.Fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import com.google.gson.Gson;
 import com.yangezhu.forumproject.R;
+import com.yangezhu.forumproject.RSSParseHandler;
+import com.yangezhu.forumproject.model.News;
+
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +34,8 @@ import com.yangezhu.forumproject.R;
  * create an instance of this fragment.
  */
 public class NewsFragment extends Fragment {
+
+    private List<News> newsList;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -55,6 +75,8 @@ public class NewsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        new DownloadAndParseRSS().execute("https://globalnews.ca/winnipeg/feed/");
     }
 
     @Override
@@ -62,5 +84,55 @@ public class NewsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_news, container, false);
+    }
+
+    private class DownloadAndParseRSS extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... args) {
+            URL rssURL = null;
+            HttpsURLConnection connection = null;
+            InputStream inputStream = null;
+
+            try {
+                rssURL = new URL(args[0]);
+                connection = (HttpsURLConnection) rssURL.openConnection();
+                inputStream = connection.getInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            SAXParserFactory spf = SAXParserFactory.newInstance();
+
+            try {
+                SAXParser saxParser = spf.newSAXParser();
+                // First argument is the data to parse
+                // Second Argument is the directions on how to parse
+                RSSParseHandler rssParseHandler = new RSSParseHandler();
+                saxParser.parse(inputStream, rssParseHandler);
+                newsList = rssParseHandler.getNewsList();
+
+                Gson gson = new Gson();
+                String newsListJson = gson.toJson(newsList);
+                Log.d("ZHU_JSON_MSG", newsListJson);
+
+            } catch (ParserConfigurationException | SAXException | IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+
+//            ListView mListView = findViewById(R.id.lv_main_list_view);
+//
+//            NewsListAdapter newsListAdapter = new NewsListAdapter(ListNewsActivity.this, R.layout.news_layout, newsList);
+//
+//            mListView.setAdapter(newsListAdapter);
+//            mListView.setOnItemClickListener(newsClick);
+        }
     }
 }
