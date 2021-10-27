@@ -47,6 +47,17 @@ public class InitialLoginActivity extends AppCompatActivity {
         });
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null){
+            startActivity(new Intent(InitialLoginActivity.this , MainActivity.class));
+            finish();
+        }
+    }
+
     private void loginUser(String email_value, String password_value) {
         auth.signInWithEmailAndPassword(email_value, password_value).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -65,4 +76,5 @@ public class InitialLoginActivity extends AppCompatActivity {
             }
         });
     }
+
 }
