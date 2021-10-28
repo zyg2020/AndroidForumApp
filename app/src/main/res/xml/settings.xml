@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:textColor="#00838F"
+        android:title="Enable Night Mode">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="NIGHT"
+            android:summaryOff="Night Mode is deactivated"
+            android:summaryOn="Night mode is activated"
+            android:title="Night Mode" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Screen orientation">
+        <ListPreference
+            android:title="Orientation"
+            android:key="ORIENTATION"
+            android:entries="@array/items_name"
+            android:entryValues="@array/items_value"
+            android:defaultValue="false"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Font size">
+        <ListPreference
+            android:title="Font Size"
+            android:key="FONT_SIZE"
+            android:entries="@array/font_size_names"
+            android:entryValues="@array/font_size_values"
+            android:defaultValue="false"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Location of News">
+        <ListPreference
+            android:title="Locations"
+            android:key="NEWS_FROM_LOCATION"
+            android:entries="@array/Locations_keys"
+            android:entryValues="@array/Locations_values"
+            android:defaultValue="false"
+            />
+    </PreferenceCategory>
+</PreferenceScreen>

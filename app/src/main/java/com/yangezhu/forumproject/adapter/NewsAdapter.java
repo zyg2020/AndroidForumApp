@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -70,7 +71,7 @@ public class NewsAdapter extends ArrayAdapter {
         }
 
         title.setText(news.getTitle());
-        news_description.setText(news.getDescription());
+        news_description.setText(Html.fromHtml(news.getDescription()));
 
         String dateValue = news.getPublish_date();
         SimpleDateFormat date_format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");

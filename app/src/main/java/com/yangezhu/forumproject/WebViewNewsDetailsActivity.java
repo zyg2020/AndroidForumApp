@@ -46,12 +46,12 @@ public class WebViewNewsDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String url = intent.getStringExtra(NewsFragment.SELECTED_NEWS_URL);
 
-        OkHttpClient mOkHttpClient = new OkHttpClient();                                 //1、
+        OkHttpClient mOkHttpClient = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)
-                .build();                                                                //2、
-        Call call = mOkHttpClient.newCall(request);                                      //3、
-        call.enqueue(new Callback()                                                      //4、
+                .build();
+        Call call = mOkHttpClient.newCall(request);
+        call.enqueue(new Callback()
         {
             @Override
             public void onFailure(Call call, IOException e) {

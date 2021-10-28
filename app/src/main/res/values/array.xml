@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="items_name">
+        <item>Auto</item>
+        <item>Portrait</item>
+        <item>Landscape</item>
+    </string-array>
+
+    <string-array name="items_value">
+        <item>Auto</item>
+        <item>Portrait</item>
+        <item>Landscape</item>
+    </string-array>
+
+    <string-array name="font_size_names">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+
+    <string-array name="font_size_values">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+
+    <string-array name="Locations_keys">
+        <item>BC</item>
+        <item>Calgary</item>
+        <item>Edmonton</item>
+        <item>Lethbridge</item>
+        <item>Regina</item>
+        <item>Saskatoon</item>
+        <item>Winnipeg</item>
+        <item>Toronto</item>
+        <item>Montreal</item>
+        <item>Halifax</item>
+        <item>New Brunswick</item>
+        <item>Okanagan</item>
+        <item>London</item>
+        <item>Hamilton</item>
+        <item>Guelph</item>
+        <item>Peterborough</item>
+        <item>Kingston</item>
+        <item>Barrie</item>
+        <item>Ottawa</item>
+    </string-array>
+
+    <string-array name="Locations_values">
+        <item>BC</item>
+        <item>Calgary</item>
+        <item>Edmonton</item>
+        <item>Lethbridge</item>
+        <item>Regina</item>
+        <item>Saskatoon</item>
+        <item>Winnipeg</item>
+        <item>Toronto</item>
+        <item>Montreal</item>
+        <item>Halifax</item>
+        <item>New Brunswick</item>
+        <item>Okanagan</item>
+        <item>London</item>
+        <item>Hamilton</item>
+        <item>Guelph</item>
+        <item>Peterborough</item>
+        <item>Kingston</item>
+        <item>Barrie</item>
+        <item>Ottawa</item>
+    </string-array>
+</resources>
