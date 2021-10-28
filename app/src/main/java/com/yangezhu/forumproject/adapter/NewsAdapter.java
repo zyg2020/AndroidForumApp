@@ -59,15 +59,18 @@ public class NewsAdapter extends ArrayAdapter {
         TextView title = convertView.findViewById(R.id.news_title);
         TextView date = convertView.findViewById(R.id.news_date);
         image = convertView.findViewById(R.id.news_image);
+        TextView news_description = convertView.findViewById(R.id.news_description);
 
         String image_url = news.getImage_url();
         if (TextUtils.isEmpty(image_url)){
             image.setVisibility(View.GONE);
         }else{
+            image.setVisibility(View.VISIBLE);
             Picasso.get().load(news.getImage_url()).into(image);
         }
 
         title.setText(news.getTitle());
+        news_description.setText(news.getDescription());
 
         String dateValue = news.getPublish_date();
         SimpleDateFormat date_format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");

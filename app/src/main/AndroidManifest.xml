@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ForumProject">
         <activity
+            android:name=".WebViewNewsDetailsActivity"
+            android:exported="true" />
+        <activity
             android:name=".RegisterActivity"
             android:exported="true" />
         <activity
@@ -25,7 +28,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>

@@ -11,7 +11,7 @@
         android:paddingBottom="15dp"
         android:text="TextView"
         android:textAlignment="textStart"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:textStyle="bold" />
 
     <TextView
@@ -21,6 +21,14 @@
         android:text="TextView"
         android:textAlignment="textStart"
         android:layout_below="@+id/news_title"
+        android:layout_toLeftOf="@+id/news_image"/>
+    <TextView
+        android:id="@+id/news_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="textStart"
+        android:layout_below="@+id/news_date"
         android:layout_toLeftOf="@+id/news_image"/>
 
     <ImageView

@@ -16,6 +16,7 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.yangezhu.forumproject.R;
 import com.yangezhu.forumproject.RSSParseHandler;
+import com.yangezhu.forumproject.WebViewNewsDetailsActivity;
 import com.yangezhu.forumproject.adapter.NewsAdapter;
 import com.yangezhu.forumproject.model.News;
 
@@ -38,6 +39,7 @@ import javax.xml.parsers.SAXParserFactory;
  */
 public class NewsFragment extends Fragment {
 
+    public static final String SELECTED_NEWS_URL = "SELECTED_NEWS_URL";
     private List<News> newsList;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -146,11 +148,11 @@ public class NewsFragment extends Fragment {
         News news = (News) adapterView.getItemAtPosition(position);
         Log.d("ZHU_JSON_MSG", news.toString());
 
-//            Intent intent = new Intent(ListNewsActivity.this, ShowNewsDetailsActivity.class);
-//            Gson gson = new Gson();
-//            String stringifiedNews = gson.toJson(news);
-//            intent.putExtra(SELECTED_NEWS, stringifiedNews);
-//
-//            ListNewsActivity.this.startActivity(intent);
+            Intent intent = new Intent(getContext(), WebViewNewsDetailsActivity.class);
+            Gson gson = new Gson();
+            String url = news.getLink();
+            intent.putExtra(SELECTED_NEWS_URL, url);
+
+            getContext().startActivity(intent);
     };
 }
