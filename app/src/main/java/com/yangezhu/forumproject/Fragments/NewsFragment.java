@@ -79,7 +79,7 @@ public class NewsFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        new DownloadAndParseRSS().execute("https://globalnews.ca/winnipeg/feed/");
+        new DownloadAndParseRSS().execute("https://globalnews.ca/toronto/feed/");
     }
 
     @Override
