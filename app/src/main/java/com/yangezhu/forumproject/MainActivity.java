@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.yangezhu.forumproject.Fragments.AddPostFragment;
 import com.yangezhu.forumproject.Fragments.ForumFragment;
 import com.yangezhu.forumproject.Fragments.HomeFragment;
 import com.yangezhu.forumproject.Fragments.NewsFragment;
@@ -48,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "News", Toast.LENGTH_SHORT).show();
                     selectedFragment = new NewsFragment();
                     break;
+                case R.id.bottom_nav_add_post:
+                    Toast.makeText(MainActivity.this, "Add Post", Toast.LENGTH_SHORT).show();
+                    selectedFragment = new AddPostFragment();
+                    break;
             }
 
             if (selectedFragment != null){
@@ -72,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.settings_action_bar){
             Toast.makeText(MainActivity.this, "Settings clicked.", Toast.LENGTH_SHORT).show();
+
+            Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(i);
         }else if (item.getItemId() == R.id.logout_action_bar){
             Toast.makeText(MainActivity.this, "Logout clicked.", Toast.LENGTH_SHORT).show();
             FirebaseAuth.getInstance().signOut();

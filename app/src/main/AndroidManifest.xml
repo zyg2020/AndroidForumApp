@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ForumProject">
         <activity
+            android:name=".SettingsActivity"
+            android:exported="true" />
+        <activity
             android:name=".WebViewNewsDetailsActivity"
             android:exported="true" />
         <activity
