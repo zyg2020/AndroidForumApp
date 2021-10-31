@@ -3,7 +3,6 @@ package com.yangezhu.forumproject.Fragments;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -17,18 +16,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yangezhu.forumproject.R;
-import com.yangezhu.forumproject.adapter.NewsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.transform.Result;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,11 +32,16 @@ import javax.xml.transform.Result;
  */
 public class AddPostFragment extends Fragment {
 
+    private EditText edt_title;
+    private EditText edt_description;
+
     private Spinner category_spinner;
     private Button btn_upload_images;
+    private Button btn_post;
+
     private TextView txt_display_upload_images;
 
-    ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
+    ArrayList<Uri> uploaded_images_uri_list = new ArrayList<Uri>();
 
     String[] categories_list = {"Used Items", "Marketing", "Rent", "Used Cars"};
     private String selected_category;
@@ -51,7 +52,6 @@ public class AddPostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -100,7 +100,10 @@ public class AddPostFragment extends Fragment {
         });
 
         txt_display_upload_images = (TextView) view.findViewById(R.id.txt_display_upload_images);
-
+        edt_title = (EditText) view.findViewById(R.id.title) ;
+        edt_description = (EditText) view.findViewById(R.id.description) ;
+        btn_post= (Button) view.findViewById(R.id.btn_add_post);
+        
         return view;
     }
 
@@ -117,12 +120,12 @@ public class AddPostFragment extends Fragment {
                     String imagePath = data.getData().getPath();
                     Log.d("YZHU_IMAGE_SELECT", "One image --> " + imagePath);
                     Uri mImageUri=data.getData();
-                    mArrayUri.add(mImageUri);
+                    uploaded_images_uri_list.add(mImageUri);
 
                     String display_text = "";
-                    for (int i = 0; i < mArrayUri.size(); i++) {
+                    for (int i = 0; i < uploaded_images_uri_list.size(); i++) {
 
-                        display_text += mArrayUri.get(i).toString() + "\n";
+                        display_text += uploaded_images_uri_list.get(i).toString() + "\n";
                         Log.d("YZHU_IMAGE_SELECT", "Multiple images --> " + imagePath);
                     }
                     txt_display_upload_images.setText(display_text);
