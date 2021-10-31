@@ -216,9 +216,8 @@ public class AddPostFragment extends Fragment {
                                     }
                                 }));
                             }
-
-
-
+                        }else{
+                            uploadPost(title, description, current_time, user_id, username, selected_category, new ArrayList<String>());
                         }
 
                         Log.d("YZHU_DATA_SUBMIT", "title: " + title);
