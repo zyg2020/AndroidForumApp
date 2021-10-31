@@ -135,62 +135,28 @@ public class AddPostFragment extends Fragment {
         edt_description = (EditText) view.findViewById(R.id.description) ;
         btn_post= (Button) view.findViewById(R.id.btn_add_post);
 
-        edt_title.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (TextUtils.isEmpty(edt_title.getText().toString())){
-                    edt_title.setError("Title cannot be blank");
-                }else{
-                    edt_title.setError(null);
-                }
-            }
-        });
-
-        edt_description.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (TextUtils.isEmpty(edt_description.getText().toString())){
-                    edt_description.setError("Description cannot be blank");
-                }else{
-                    edt_description.setError(null);
-                }
-            }
-        });
-
         btn_post.setOnClickListener(view12 -> {
-            progressDialog = new ProgressDialog(getContext());
-            progressDialog.setMessage("Posting...");
-            progressDialog.show();
 
             String title = edt_title.getText().toString();
             String description = edt_description.getText().toString();
-            Date date=new Date();
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-            String current_time = formatter.format(date);
 
             if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description)){
                 Toast.makeText(getContext(),"Please fill out at least title and description fields.", Toast.LENGTH_LONG).show();
+                if (TextUtils.isEmpty(title)){
+                    edt_title.setError("Title cannot be blank");
+                }else if (TextUtils.isEmpty(description)){
+                    edt_description.setError("Description cannot be blank");
+                }
+
             }else{
+                progressDialog = new ProgressDialog(getContext());
+                progressDialog.setMessage("Posting...");
+                progressDialog.show();
+
+                Date date=new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                String current_time = formatter.format(date);
+
                 auth = FirebaseAuth.getInstance();
                 firestore = FirebaseFirestore.getInstance();
 
@@ -269,6 +235,7 @@ public class AddPostFragment extends Fragment {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()){
                                     progressDialog.dismiss();
+                                    clearForm();
                                 }
                             }
                         });
@@ -284,7 +251,13 @@ public class AddPostFragment extends Fragment {
                 });
 
 
+    }
 
+    private void clearForm() {
+        edt_title.setText("");
+        edt_description.setText("");
+        uploaded_images_uri_list = new ArrayList<Uri>();
+        txt_display_upload_images.setText("");
     }
 
     private String getFileExtension(Uri url) {
