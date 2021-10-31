@@ -16,7 +16,10 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 import com.yangezhu.forumproject.R;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,7 +48,11 @@ public class ForumFragment extends Fragment {
                 for (DocumentChange documentChange: documentSnapshots.getDocumentChanges()){
                     if (documentChange.getType() == DocumentChange.Type.ADDED){
                         String name = documentChange.getDocument().getString("title");
+                        List<String> images = (List<String>) documentChange.getDocument().get("images");
+                        Gson gson = new Gson();
+
                         Log.d(TAG, "name: " + name);
+                        Log.d(TAG, "images: " + gson.toJson(images));
                     }
                 }
             }
