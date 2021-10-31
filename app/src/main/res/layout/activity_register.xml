@@ -74,8 +74,8 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Register"
-            android:id="@+id/btn_to_register_activity"
+            android:text="Login"
+            android:id="@+id/btn_to_login_activity"
             android:layout_marginTop="15dp"
             android:layout_marginLeft="8dp"/>
     </LinearLayout>

@@ -35,6 +35,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText email;
     private EditText password;
     private Button register_btn;
+    private Button btn_to_login_activity;
+
 
     private FirebaseAuth auth;
     FirebaseFirestore firestore;
@@ -51,6 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
         register_btn = (Button) findViewById(R.id.register);
+        btn_to_login_activity = (Button)findViewById(R.id.btn_to_login_activity);
 
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
@@ -72,6 +75,10 @@ public class RegisterActivity extends AppCompatActivity {
                 progressDialog.show();
                 registerUser(txt_username, txt_name, txt_email, txt_password);
             }
+        });
+
+        btn_to_login_activity.setOnClickListener(view -> {
+            onBackPressed();
         });
     }
 

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ public class InitialLoginActivity extends AppCompatActivity {
     private EditText email_edt_text;
     private EditText password_edt_text;
     private Button login_btn;
+    private Button btn_to_register_activity;
 
     private FirebaseAuth auth;
 
@@ -32,6 +34,7 @@ public class InitialLoginActivity extends AppCompatActivity {
         email_edt_text = (EditText)findViewById(R.id.email);
         password_edt_text = (EditText)findViewById(R.id.password);
         login_btn = findViewById(R.id.login);
+        btn_to_register_activity = (Button) findViewById(R.id.btn_to_register_activity);
 
         auth = FirebaseAuth.getInstance();
 
@@ -44,6 +47,11 @@ public class InitialLoginActivity extends AppCompatActivity {
             } else {
                 loginUser(email_value , password_value);
             }
+        });
+
+        btn_to_register_activity.setOnClickListener(view -> {
+            Intent intent = new Intent(InitialLoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
         });
     }
 

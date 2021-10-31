@@ -42,6 +42,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.yangezhu.forumproject.MainActivity;
 import com.yangezhu.forumproject.R;
+import com.yangezhu.forumproject.utilities.DateUtilities;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -153,9 +154,7 @@ public class AddPostFragment extends Fragment {
                 progressDialog.setMessage("Posting...");
                 progressDialog.show();
 
-                Date date=new Date();
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-                String current_time = formatter.format(date);
+                String current_time = DateUtilities.getCurrentTime();
 
                 auth = FirebaseAuth.getInstance();
                 firestore = FirebaseFirestore.getInstance();

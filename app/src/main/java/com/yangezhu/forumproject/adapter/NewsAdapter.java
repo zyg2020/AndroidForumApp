@@ -1,12 +1,8 @@
 package com.yangezhu.forumproject.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +17,6 @@ import com.squareup.picasso.Picasso;
 import com.yangezhu.forumproject.R;
 import com.yangezhu.forumproject.model.News;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,9 +49,9 @@ public class NewsAdapter extends ArrayAdapter {
         News news = (News) getItem(position);
 
         TextView title = convertView.findViewById(R.id.news_title);
-        TextView date = convertView.findViewById(R.id.news_date);
-        image = convertView.findViewById(R.id.news_image);
-        TextView news_description = convertView.findViewById(R.id.news_description);
+        TextView date = convertView.findViewById(R.id.post_date);
+        image = convertView.findViewById(R.id.post_image);
+        TextView news_description = convertView.findViewById(R.id.post_description);
 
         String image_url = news.getImage_url();
         if (TextUtils.isEmpty(image_url)){
