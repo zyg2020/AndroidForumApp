@@ -2,11 +2,13 @@ package com.yangezhu.forumproject.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 public class Post {
     private String title;
     private String description;
-    private String publish_date;
+    private Date publish_date;
+
     private String lastest_reply_date;
     private String user_name;
     private String user_id;
@@ -14,7 +16,7 @@ public class Post {
     private List<String> images;
     private String comments;
 
-    public Post(String title, String description, String publish_date, String lastest_reply_date, String user_name, String user_id, String category, List<String> images, String comments) {
+    public Post(String title, String description, Date publish_date, String lastest_reply_date, String user_name, String user_id, String category, List<String> images, String comments) {
         this.title = title;
         this.description = description;
         this.publish_date = publish_date;
@@ -45,13 +47,14 @@ public class Post {
         this.description = description;
     }
 
-    public String getPublish_date() {
+    public Date getPublish_date() {
         return publish_date;
     }
 
-    public void setPublish_date(String publish_date) {
+    public void setPublish_date(Date publish_date) {
         this.publish_date = publish_date;
     }
+
 
     public String getLastest_reply_date() {
         return lastest_reply_date;

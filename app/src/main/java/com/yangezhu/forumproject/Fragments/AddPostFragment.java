@@ -154,8 +154,8 @@ public class AddPostFragment extends Fragment {
                 progressDialog.setMessage("Posting...");
                 progressDialog.show();
 
-                String current_time = DateUtilities.getCurrentTime();
-
+                // String current_time = DateUtilities.getCurrentTime();
+                Date current_time =new Date();
                 auth = FirebaseAuth.getInstance();
                 firestore = FirebaseFirestore.getInstance();
 
@@ -187,7 +187,7 @@ public class AddPostFragment extends Fragment {
 
                         Log.d("YZHU_DATA_SUBMIT", "title: " + title);
                         Log.d("YZHU_DATA_SUBMIT", "description: " + description);
-                        Log.d("YZHU_DATA_SUBMIT", "publish_date: " + current_time);
+                        Log.d("YZHU_DATA_SUBMIT", "publish_date: " + current_time.toString());
 
                         Log.d("YZHU_DATA_SUBMIT", "user_id: " + user_id);
                         Log.d("YZHU_DATA_SUBMIT", "username: " + username);
@@ -209,7 +209,7 @@ public class AddPostFragment extends Fragment {
         return view;
     }
 
-    private void uploadPost(String title, String description, String current_time, String user_id, String username, String selected_category, List<String> uploaded_images_url) {
+    private void uploadPost(String title, String description, Date current_time, String user_id, String username, String selected_category, List<String> uploaded_images_url) {
         for (int i = 0; i < uploaded_images_url.size(); i++) {
             Log.d("YZHU_DATA_SUBMIT", "Multiple images --> " + uploaded_images_url.get(i));
         }
