@@ -176,7 +176,11 @@ public class AddPostFragment extends Fragment {
                                     String url = uri.toString();
                                     uploaded_images_url.add(url);
                                     Log.d("YZHU_DATA_SUBMIT", "One image uploaded: " + url);
-                                    if (current_index == uploaded_images_uri_list.size()-1){
+//                                    if (current_index == uploaded_images_uri_list.size()-1){
+//                                        uploadPost(title, description, current_time, user_id, username, selected_category, uploaded_images_url);
+//                                    }
+
+                                    if (uploaded_images_url.size() == uploaded_images_uri_list.size()){
                                         uploadPost(title, description, current_time, user_id, username, selected_category, uploaded_images_url);
                                     }
                                 }));
@@ -284,7 +288,7 @@ public class AddPostFragment extends Fragment {
                     for (int i = 0; i < uploaded_images_uri_list.size(); i++) {
 
                         display_text += uploaded_images_uri_list.get(i).toString() + "\n";
-                        Log.d("YZHU_IMAGE_SELECT", "Multiple images --> " + imagePath);
+                        Log.d("YZHU_IMAGE_SELECT", "Multiple images --> " + uploaded_images_uri_list.get(i));
                     }
                     txt_display_upload_images.setText(display_text);
 

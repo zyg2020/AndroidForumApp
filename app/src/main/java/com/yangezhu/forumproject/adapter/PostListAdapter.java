@@ -2,6 +2,7 @@ package com.yangezhu.forumproject.adapter;
 
 import android.text.Layout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.auth.User;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.yangezhu.forumproject.R;
 import com.yangezhu.forumproject.model.Post;
@@ -58,6 +60,12 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
                 Picasso.get().load(images_list.get(1)).into(holder.image_right);
             }
         }
+
+        holder.itemView.setOnClickListener(view -> {
+            Gson gson = new Gson();
+
+            Log.d("YZHU_CLICK_ITEM", "Item clicked: " + gson.toJson(posts_list.get(position)));
+        });
     }
 
     @Override
@@ -67,7 +75,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        private View itemView;
+        public View itemView;
 
         public TextView post_username;
         public TextView post_title;
@@ -75,8 +83,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
         public TextView post_date;
         public ImageView image_left;
         public ImageView image_right;
-
-
+        
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.itemView = itemView;
