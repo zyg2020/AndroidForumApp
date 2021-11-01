@@ -1,8 +1,11 @@
 package com.yangezhu.forumproject.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Printer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.auth.User;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+import com.yangezhu.forumproject.PostDetailsWithCommentsActivity;
 import com.yangezhu.forumproject.R;
 import com.yangezhu.forumproject.model.Post;
 
@@ -23,9 +27,13 @@ import java.util.List;
 public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHolder> {
 
     public List<Post> posts_list;
+    private Context mContext;
 
-    public PostListAdapter(List<Post> posts_list){
+    public static String SELECTED_POST = "SELECTED_POST";
+
+    public PostListAdapter(List<Post> posts_list, Context context){
         this.posts_list = posts_list;
+        this.mContext = context;
     }
 
     @NonNull
@@ -63,8 +71,12 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
 
         holder.itemView.setOnClickListener(view -> {
             Gson gson = new Gson();
+            String stringifiedPost = gson.toJson(posts_list.get(position));
+            Log.d("YZHU_CLICK_ITEM", "Item clicked: " + stringifiedPost);
 
-            Log.d("YZHU_CLICK_ITEM", "Item clicked: " + gson.toJson(posts_list.get(position)));
+            Intent intent = new Intent(mContext, PostDetailsWithCommentsActivity.class);
+            intent.putExtra(SELECTED_POST, stringifiedPost);
+            mContext.startActivity(intent);
         });
     }
 
@@ -83,7 +95,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
         public TextView post_date;
         public ImageView image_left;
         public ImageView image_right;
-        
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.itemView = itemView;

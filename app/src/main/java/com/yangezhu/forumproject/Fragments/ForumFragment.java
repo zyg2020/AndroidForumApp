@@ -50,7 +50,7 @@ public class ForumFragment extends Fragment {
         firestore = FirebaseFirestore.getInstance();
 
         posts_list = new ArrayList<>();
-        postListAdapter = new PostListAdapter(posts_list);
+        postListAdapter = new PostListAdapter(posts_list, getContext());
     }
 
     @Override
