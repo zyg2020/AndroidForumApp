@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primaryTextColor"
     tools:context=".PostDetailsWithCommentsActivity">
 
     <androidx.core.widget.NestedScrollView
@@ -67,4 +68,22 @@
 
 
     </androidx.core.widget.NestedScrollView>
+
+    <EditText
+        android:id="@+id/edt_input_comment_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/btn_reply"
+        android:background="@color/white"
+
+        android:hint="Reply this post" />
+
+    <Button
+        android:id="@+id/btn_reply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:text="Reply" />
 </RelativeLayout>
