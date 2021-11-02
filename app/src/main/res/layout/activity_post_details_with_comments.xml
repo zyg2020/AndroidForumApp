@@ -69,21 +69,37 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <EditText
-        android:id="@+id/edt_input_comment_box"
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/btn_reply"
-        android:background="@color/white"
+        android:padding="0dp"
+        android:background="#d9d9d9">
 
-        android:hint="Reply this post" />
+        <EditText
+            android:id="@+id/edt_input_comment_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxHeight="150dp"
+            android:minHeight="40dp"
+            android:layout_toLeftOf="@+id/btn_reply"
+            android:background="@color/white"
+            android:hint="Reply this post" />
 
-    <Button
-        android:id="@+id/btn_reply"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:text="Reply" />
+        <Button
+            android:id="@+id/btn_reply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:minWidth="60dp"
+            android:minHeight="40dp"
+            android:text="Reply"
+            android:layout_margin="0dp"
+            android:padding="0dp"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+
 </RelativeLayout>
