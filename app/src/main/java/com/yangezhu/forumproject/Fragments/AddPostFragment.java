@@ -69,6 +69,7 @@ public class AddPostFragment extends Fragment {
     private TextView txt_display_upload_images;
 
     ArrayList<Uri> uploaded_images_uri_list = new ArrayList<Uri>();
+    Map<Uri, String> selected_images_key_uploaded_url_value = new HashMap<>();
 
     String[] categories_list = {"Used Items", "Marketing", "Rent", "Used Cars"};
     private String selected_category;
@@ -167,6 +168,7 @@ public class AddPostFragment extends Fragment {
 
                         if (uploaded_images_uri_list.size() > 0){
                             List<String> uploaded_images_url = new ArrayList<String>();
+
                             boolean complete_upload = false;
                             for (int i = 0; i < uploaded_images_uri_list.size(); i++) {
                                 StorageReference fileRef = FirebaseStorage.getInstance().getReference()
@@ -174,7 +176,10 @@ public class AddPostFragment extends Fragment {
                                 int current_index = i;
                                 fileRef.putFile(uploaded_images_uri_list.get(i)).addOnCompleteListener(task1 -> fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
                                     String url = uri.toString();
+
                                     uploaded_images_url.add(url);
+
+                                    selected_images_key_uploaded_url_value.put(uploaded_images_uri_list.get(current_index), url);
                                     Log.d("YZHU_DATA_SUBMIT", "One image uploaded: " + url);
 //                                    if (current_index == uploaded_images_uri_list.size()-1){
 //                                        uploadPost(title, description, current_time, user_id, username, selected_category, uploaded_images_url);
@@ -217,6 +222,15 @@ public class AddPostFragment extends Fragment {
         for (int i = 0; i < uploaded_images_url.size(); i++) {
             Log.d("YZHU_DATA_SUBMIT", "Multiple images --> " + uploaded_images_url.get(i));
         }
+
+        uploaded_images_url.clear();
+        for (int i = 0; i < uploaded_images_uri_list.size(); i++) {
+            uploaded_images_url.add(selected_images_key_uploaded_url_value.get(uploaded_images_uri_list.get(i)));
+            Log.d("YZHU_Correct_ORDER", "Multiple images --> " + uploaded_images_url.get(i));
+        }
+
+
+
 
         Map<String, Object> post_date_map = new HashMap<>();
         post_date_map.put("title", title);
@@ -283,6 +297,7 @@ public class AddPostFragment extends Fragment {
                     Log.d("YZHU_IMAGE_SELECT", "One image --> " + imagePath);
                     Uri mImageUri=data.getData();
                     uploaded_images_uri_list.add(mImageUri);
+                    selected_images_key_uploaded_url_value.put(mImageUri, "");
 
                     String display_text = "";
                     for (int i = 0; i < uploaded_images_uri_list.size(); i++) {
