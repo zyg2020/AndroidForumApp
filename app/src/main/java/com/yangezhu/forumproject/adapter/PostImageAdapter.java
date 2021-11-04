@@ -1,6 +1,7 @@
 package com.yangezhu.forumproject.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -80,16 +81,24 @@ class ResizeTransformation implements Transformation{
 
     @Override
     public Bitmap transform(Bitmap source) {
-        int target_width = 1080;
+        int target_width = Resources.getSystem().getDisplayMetrics().widthPixels;
 
         double aspect_ration = (double) source.getHeight()/source.getWidth();
         int target_height = (int) (target_width * aspect_ration);
-        Bitmap result = Bitmap.createScaledBitmap(source, target_width, target_height,false);
-        if (result != source) {
-            // Same bitmap is returned if sizes are the same
-            source.recycle();
+
+        if (source.getWidth() > target_width){
+            Bitmap result = Bitmap.createScaledBitmap(source, target_width, target_height,false);
+            if (result != source) {
+                // Same bitmap is returned if sizes are the same
+                source.recycle();
+            }
+            return result;
+        }else{
+            return source;
         }
-        return result;
+
+
+
     }
 
     @Override

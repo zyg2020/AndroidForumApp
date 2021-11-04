@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,7 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -42,6 +45,8 @@ public class ForumFragment extends Fragment {
     private PostListAdapter postListAdapter;
     private RecyclerView recycle_view_posts_entries_list;
 
+    private FloatingActionButton btn_add_post;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +63,13 @@ public class ForumFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_forum, container, false);
+
+        btn_add_post = (FloatingActionButton)view.findViewById(R.id.btn_add_post);
+        btn_add_post.setOnClickListener(view1 -> {
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().add(R.id.fragment_container_view, new AddPostFragment()).addToBackStack("").commit();
+        });
+
         recycle_view_posts_entries_list = (RecyclerView)view.findViewById(R.id.recycle_view_posts_entries_list);
         recycle_view_posts_entries_list.setHasFixedSize(true);
 
