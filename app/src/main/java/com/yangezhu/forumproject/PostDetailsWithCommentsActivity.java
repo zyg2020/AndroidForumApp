@@ -15,6 +15,7 @@ import com.yangezhu.forumproject.adapter.PostImageAdapter;
 import com.yangezhu.forumproject.adapter.PostListAdapter;
 import com.yangezhu.forumproject.model.News;
 import com.yangezhu.forumproject.model.Post;
+import com.yangezhu.forumproject.utilities.DateUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,8 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
 
         post_title.setText(selected_post.getTitle());
         post_username.setText(selected_post.getUser_name());
-        post_publish_time.setText(selected_post.getPublish_date().toString());
+        post_publish_time.setText(DateUtilities.timeFormatterWithYear(selected_post.getPublish_date()));
+
         post_description.setText(selected_post.getDescription());
 
         firestore = FirebaseFirestore.getInstance();

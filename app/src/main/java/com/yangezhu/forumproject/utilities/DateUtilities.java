@@ -10,4 +10,17 @@ public class DateUtilities {
         String current_time = formatter.format(date);
         return current_time;
     }
+
+    public static String timeFormatter(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM HH:mm:ss");
+        String current_time = formatter.format(date);
+        return current_time;
+    }
+
+    public static String timeFormatterWithYear(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String current_time = formatter.format(date);
+        return current_time;
+    }
+
 }

@@ -9,7 +9,8 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,6 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
+                android:paddingBottom="10dp"
                 android:text="title"
                 android:textColor="#000000"
                 android:textSize="20sp"
@@ -31,6 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
+                android:paddingBottom="8dp"
                 android:text="post_username"
                 android:textColor="#3E3838"
                 android:textSize="16sp" />
@@ -40,6 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
+                android:paddingBottom="15dp"
                 android:text="post_publish_time"
                 android:textColor="#A3A3A3"
                 android:textSize="12sp" />
@@ -48,6 +52,7 @@
                 android:id="@+id/post_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="15dp"
                 android:text="post_description"
                 android:textColor="#3C3C3C" />
 
@@ -81,22 +86,27 @@
             android:id="@+id/edt_input_comment_box"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="150dp"
-            android:minHeight="40dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginBottom="7dp"
             android:layout_toLeftOf="@+id/btn_reply"
             android:background="@color/white"
-            android:hint="Reply this post" />
+            android:hint="Reply this post"
+            android:maxHeight="150dp"
+            android:minHeight="40dp" />
 
         <Button
             android:id="@+id/btn_reply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="7dp"
             android:minWidth="60dp"
             android:minHeight="40dp"
-            android:text="Reply"
-            android:layout_margin="0dp"
             android:padding="0dp"
+            android:text="Reply"
             android:textSize="12sp" />
 
     </RelativeLayout>

@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import com.yangezhu.forumproject.PostDetailsWithCommentsActivity;
 import com.yangezhu.forumproject.R;
 import com.yangezhu.forumproject.model.Post;
+import com.yangezhu.forumproject.utilities.DateUtilities;
 
 import java.util.List;
 
@@ -47,7 +48,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
     public void onBindViewHolder(@NonNull PostListAdapter.ViewHolder holder, int position) {
         holder.post_username.setText(posts_list.get(position).getUser_name());
         holder.post_title.setText(posts_list.get(position).getTitle());
-        holder.post_date.setText(posts_list.get(position).getPublish_date().toString());
+        holder.post_date.setText(DateUtilities.timeFormatter(posts_list.get(position).getPublish_date()));
+
         String description = posts_list.get(position).getDescription();
 
         if (description.length() > 100){

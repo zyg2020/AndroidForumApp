@@ -5,9 +5,18 @@ import java.util.List;
 import java.util.Date;
 
 public class Post {
+    private String post_id;
     private String title;
     private String description;
     private Date publish_date;
+
+    public String getPost_id() {
+        return post_id;
+    }
+
+    public void setPost_id(String post_id) {
+        this.post_id = post_id;
+    }
 
     private String lastest_reply_date;
     private String user_name;

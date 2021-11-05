@@ -12,12 +12,13 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -49,6 +50,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:text="Content" />
 
                 <EditText
@@ -69,6 +71,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:width="100dp"
                     android:text="Category" />
 
@@ -76,13 +79,16 @@
                     android:id="@+id/category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:spinnerMode="dropdown"
                     tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -92,30 +98,31 @@
                     android:text="Upload Images" />
 
                 <Button
+                    android:id="@+id/btn_upload_images"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/btn_upload_images"
-                    android:text="Upload Images"
-                    />
+                    android:text="Upload Images" />
 
             </LinearLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/txt_display_upload_images"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="" />
+
                 <Button
+                    android:id="@+id/btn_add_post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/btn_add_post"
-                    android:text="Post"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
-                    />
+                    android:layout_marginTop="15dp"
+                    android:text="Post" />
             </RelativeLayout>
 
 

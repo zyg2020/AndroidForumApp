@@ -22,6 +22,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.yangezhu.forumproject.R;
@@ -93,8 +94,9 @@ public class ForumFragment extends Fragment {
 
                 for (DocumentChange documentChange: documentSnapshots.getDocumentChanges()){
                     if (documentChange.getType() == DocumentChange.Type.ADDED){
-
-                        Post post = documentChange.getDocument().toObject(Post.class);
+                        QueryDocumentSnapshot queryDocumentSnapshot = documentChange.getDocument();
+                        Post post = queryDocumentSnapshot.toObject(Post.class);
+                        post.setPost_id(queryDocumentSnapshot.getId());
                         posts_list.add(post);
 
                         postListAdapter.notifyDataSetChanged();
