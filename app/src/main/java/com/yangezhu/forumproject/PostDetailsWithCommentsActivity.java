@@ -1,5 +1,7 @@
 package com.yangezhu.forumproject;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,10 +19,24 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
+import com.yangezhu.forumproject.adapter.CommentListAdapter;
 import com.yangezhu.forumproject.adapter.PostImageAdapter;
 import com.yangezhu.forumproject.adapter.PostListAdapter;
+import com.yangezhu.forumproject.model.Comment;
 import com.yangezhu.forumproject.model.News;
 import com.yangezhu.forumproject.model.Post;
 import com.yangezhu.forumproject.utilities.DateUtilities;
@@ -28,7 +44,9 @@ import com.yangezhu.forumproject.utilities.SharedPreferencesManager;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PostDetailsWithCommentsActivity extends AppCompatActivity {
 
@@ -44,8 +62,12 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
 
     private FirebaseFirestore firestore;
     private PostImageAdapter postImageAdapter;
+    private CommentListAdapter commentListAdapter;
 
     private List<String> post_images_list;
+    private List<Comment> comments_list;
+
+    private final String TAG = "POST_WITH_COMMENTS_YZHU";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +111,7 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
                 }else{
                     Log.d("USERNAME_YZHU", username);
                     Log.d("USERNAME_YZHU", userId);
+                    uploadComment(username, userId, comment_content, current_time, post_id);
                 }
 
             }
@@ -99,8 +122,68 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
         initiateRecycleViewForPostComments();
     }
 
+    private void uploadComment(String username, String userId, String comment_content, Date current_time, String post_id) {
+        Map<String, Object> comment_data = new HashMap<>();
+        comment_data.put("user_name", username);
+        comment_data.put("user_id", userId);
+        comment_data.put("reply_date", current_time);
+        comment_data.put("content", comment_content);
+
+        DocumentReference new_comment = firestore.collection("posts").document(post_id).collection("comments").document();
+        new_comment.set(comment_data).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(PostDetailsWithCommentsActivity.this, "Comment successfully created!", Toast.LENGTH_LONG).show();
+                edt_input_comment_box.setText("");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("YZHU_DATA_SUBMIT", "Error writing document:----", e);
+                Toast.makeText(PostDetailsWithCommentsActivity.this, "Failed to create comment!", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 
     private void initiateRecycleViewForPostComments() {
+        comments_list = new ArrayList<>();
+        commentListAdapter = new CommentListAdapter(comments_list, this);
+
+        recycle_view_post_comments = (RecyclerView)findViewById(R.id.recycle_view_post_comments);
+        recycle_view_post_comments.setHasFixedSize(true);
+
+        // Set recyclerView orientation.
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recycle_view_post_comments.setLayoutManager(linearLayoutManager);
+
+        // Add devide bar
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recycle_view_post_comments.getContext(),
+//                linearLayoutManager.getOrientation());
+//        recycle_view_post_comments.addItemDecoration(dividerItemDecoration);
+
+        recycle_view_post_comments.setAdapter(commentListAdapter);
+
+        firestore.collection("posts").document(selected_post.getPost_id()).collection("comments").orderBy("reply_date", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null){
+                    Log.d(TAG, "Error: " + error.getMessage());
+                }
+
+                for (DocumentChange documentChange: value.getDocumentChanges()){
+                    if (documentChange.getType() == DocumentChange.Type.ADDED){
+                        QueryDocumentSnapshot queryDocumentSnapshot = documentChange.getDocument();
+                        Comment comment = queryDocumentSnapshot.toObject(Comment.class);
+                        comment.setComment_id(queryDocumentSnapshot.getId());
+                        comments_list.add(comment);
+
+                        commentListAdapter.notifyDataSetChanged();
+
+                    }
+                }
+            }
+        });
     }
 
     private void initiateRecycleViewForPostImages() {
