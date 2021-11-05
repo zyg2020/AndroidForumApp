@@ -204,15 +204,9 @@ public class AddPostFragment extends Fragment {
                         for (int i = 0; i < uploaded_images_uri_list.size(); i++) {
                             Log.d("YZHU_DATA_SUBMIT", "Multiple images --> " + uploaded_images_uri_list.get(i).toString());
                         }
-
-
                     }
                 });
-
-
-
             }
-
         });
 
         return view;
@@ -228,9 +222,6 @@ public class AddPostFragment extends Fragment {
             uploaded_images_url.add(selected_images_key_uploaded_url_value.get(uploaded_images_uri_list.get(i)));
             Log.d("YZHU_Correct_ORDER", "Multiple images --> " + uploaded_images_url.get(i));
         }
-
-
-
 
         Map<String, Object> post_date_map = new HashMap<>();
         post_date_map.put("title", title);

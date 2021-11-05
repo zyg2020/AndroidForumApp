@@ -1,6 +1,8 @@
 package com.yangezhu.forumproject.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +25,7 @@ import com.yangezhu.forumproject.InitialLoginActivity;
 import com.yangezhu.forumproject.MainActivity;
 import com.yangezhu.forumproject.R;
 import com.yangezhu.forumproject.RegisterActivity;
+import com.yangezhu.forumproject.utilities.SharedPreferencesManager;
 
 import org.w3c.dom.Document;
 
@@ -90,6 +93,10 @@ public class HomeFragment extends Fragment {
 
                     TextView initial_edit_text = (TextView)getView().findViewById(R.id.initial_message);
                     initial_edit_text.setText("Hello, " + username);
+
+                    SharedPreferencesManager.getInstance(getContext()).setUsername(username);
+                    SharedPreferencesManager.getInstance(getContext()).setUserId(user_id);
+
                 }
             }
         });
