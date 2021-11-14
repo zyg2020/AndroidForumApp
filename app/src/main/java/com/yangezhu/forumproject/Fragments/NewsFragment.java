@@ -41,6 +41,7 @@ public class NewsFragment extends Fragment {
 
     public static final String SELECTED_NEWS_URL = "SELECTED_NEWS_URL";
     private List<News> newsList;
+    private DownloadAndParseRSS downloadAndParseRSS;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -81,7 +82,7 @@ public class NewsFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        new DownloadAndParseRSS().execute("https://globalnews.ca/toronto/feed/");
+        downloadAndParseRSS = (DownloadAndParseRSS) new DownloadAndParseRSS().execute("https://globalnews.ca/toronto/feed/");
     }
 
     @Override
@@ -92,6 +93,14 @@ public class NewsFragment extends Fragment {
 
 
         return view;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (downloadAndParseRSS != null){
+            downloadAndParseRSS.cancel(true);
+        }
     }
 
     private class DownloadAndParseRSS extends AsyncTask<String, Void, Void> {

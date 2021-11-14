@@ -39,7 +39,7 @@ public class PostImageAdapter extends RecyclerView.Adapter<PostImageAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ResizeTransformation resizeTransformation = new ResizeTransformation();
-        Picasso.get().load(images_list.get(position)).transform(resizeTransformation).into(holder.image);
+        Picasso.get().load(images_list.get(position)).transform(resizeTransformation).into(holder.image); //
 
         holder.item_view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +81,7 @@ class ResizeTransformation implements Transformation{
 
     @Override
     public Bitmap transform(Bitmap source) {
-        int target_width = Resources.getSystem().getDisplayMetrics().widthPixels;
+        int target_width = Resources.getSystem().getDisplayMetrics().widthPixels - 30;
 
         double aspect_ration = (double) source.getHeight()/source.getWidth();
         int target_height = (int) (target_width * aspect_ration);
@@ -96,9 +96,6 @@ class ResizeTransformation implements Transformation{
         }else{
             return source;
         }
-
-
-
     }
 
     @Override
