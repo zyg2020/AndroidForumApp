@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
 
             boolean render = true;
+            String tag = "";
             switch (item.getItemId()){
                 case R.id.bottom_nav_home:
                     //Toast.makeText(MainActivity.this, "Home", Toast.LENGTH_SHORT).show();
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
                         render = false;
                     }else{
                         selectedFragment = new HomeFragment();
+                        tag = "HomeFragment";
                     }
                     break;
                 case R.id.bottom_nav_forum:
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
                         render = false;
                     }else{
                         selectedFragment = new ForumFragment();
+                        tag = "ForumFragment";
                     }
                     break;
                 case R.id.bottom_nav_news:
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                         render = false;
                     }else{
                         selectedFragment = new NewsFragment();
+                        tag = "NewsFragment";
                     }
                     break;
                 case R.id.bottom_nav_add_post:
@@ -71,18 +75,19 @@ public class MainActivity extends AppCompatActivity {
                         render = false;
                     }else{
                         selectedFragment = new AddPostFragment();
+                        tag = "AddPostFragment";
                     }
                     break;
             }
 
             if (selectedFragment != null && render){
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, selectedFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, selectedFragment,tag).commit();
             }
 
             return true;
         });
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new HomeFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new HomeFragment(), "HomeFragment").commit();
     }
 
     @Override

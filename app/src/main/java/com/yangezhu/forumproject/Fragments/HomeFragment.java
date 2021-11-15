@@ -1,8 +1,5 @@
 package com.yangezhu.forumproject.Fragments;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,23 +8,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.yangezhu.forumproject.InitialLoginActivity;
-import com.yangezhu.forumproject.MainActivity;
 import com.yangezhu.forumproject.R;
-import com.yangezhu.forumproject.RegisterActivity;
 import com.yangezhu.forumproject.utilities.SharedPreferencesManager;
-
-import org.w3c.dom.Document;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -91,12 +80,14 @@ public class HomeFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     username = document.getString ("username");
 
-                    TextView initial_edit_text = (TextView)getView().findViewById(R.id.initial_message);
-                    initial_edit_text.setText("Hello, " + username);
+                    HomeFragment myFragment = (HomeFragment)getActivity().getSupportFragmentManager().findFragmentByTag("HomeFragment");
+                    if (myFragment != null && myFragment.isVisible()) {
+                        TextView initial_edit_text = (TextView)getView().findViewById(R.id.initial_message);
+                        initial_edit_text.setText("Hello, " + username);
 
-                    SharedPreferencesManager.getInstance(getContext()).setUsername(username);
-                    SharedPreferencesManager.getInstance(getContext()).setUserId(user_id);
-
+                        SharedPreferencesManager.getInstance(getContext()).setUsername(username);
+                        SharedPreferencesManager.getInstance(getContext()).setUserId(user_id);
+                    }
                 }
             }
         });
