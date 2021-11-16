@@ -37,6 +37,17 @@
         android:text="LOGIN"
         android:padding="10dp"
         android:id="@+id/login"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/google_signIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/roundedbutton"
+        android:drawableLeft="@drawable/google"
+        android:elevation="8dp"
+        android:text="Sign In with Google"
+        android:textColor="#000"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"

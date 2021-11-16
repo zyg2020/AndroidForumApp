@@ -10,18 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.yangezhu.forumproject.R;
 import com.yangezhu.forumproject.utilities.SharedPreferencesManager;
 
+import java.util.HashMap;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
 
@@ -29,45 +32,20 @@ public class HomeFragment extends Fragment {
     private FirebaseFirestore firestore;
 
     private String username;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private TextView textView1;
+    private TextView textView2;
+    private TextView textView3;
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
 
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
@@ -101,6 +79,35 @@ public class HomeFragment extends Fragment {
 
 //        TextView initial_edit_text = view.findViewById(R.id.initial_message);
 //        initial_edit_text.setText("Hello, " + username);
+        textView1 = (TextView) view.findViewById(R.id.textView1);
+        textView2 = (TextView) view.findViewById(R.id.textView2);
+        textView3 = (TextView) view.findViewById(R.id.textView3);
+
+        GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(getContext());
+        if(signInAccount != null){
+            textView1.setText("getDisplayName" + signInAccount.getDisplayName());
+            textView2.setText("getEmail"+signInAccount.getEmail());
+            textView3.setText("getId" + signInAccount.getId() + "\ngetFamilyName: " + signInAccount.getFamilyName() + "\nUID: " + auth.getCurrentUser().getUid());
+            String user_id = auth.getCurrentUser().getUid();
+            DocumentReference userRef = firestore.collection("users").document(user_id);
+            userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if ( task.isSuccessful()){
+                        DocumentSnapshot document = task.getResult();
+                        if (!document.exists()){
+
+
+                            HashMap<String, Object> user_data_map = new HashMap<>();
+                            user_data_map.put("name", signInAccount.getDisplayName());
+                            user_data_map.put("email", signInAccount.getEmail());
+                            user_data_map.put("id", user_id);
+                            userRef.set(user_data_map);
+                        }
+                    }
+                }
+            });
+        }
 
         return view;
     }

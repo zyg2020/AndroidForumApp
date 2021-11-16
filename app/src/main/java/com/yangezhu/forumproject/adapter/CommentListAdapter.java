@@ -2,6 +2,7 @@ package com.yangezhu.forumproject.adapter;
 
 import android.content.Context;
 import android.text.Layout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,13 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     @Override
     public void onBindViewHolder(@NonNull CommentListAdapter.ViewHolder holder, int position) {
         Comment current_comment = comments_list.get(position);
-        holder.comment_username.setText(current_comment.getUser_name());
+        String username = current_comment.getUser_name();
+        if (TextUtils.isEmpty(username)){
+            holder.comment_username.setText(current_comment.getName());
+        }else{
+            holder.comment_username.setText(username);
+        }
+
         holder.comment_content.setText(current_comment.getContent());
         holder.comment_date.setText(DateUtilities.timeFormatterWithYear(current_comment.getReply_date()));
     }

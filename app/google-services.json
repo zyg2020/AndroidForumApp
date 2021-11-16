@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "947906805793-ul7520tobojs7iah3qr1m1eqoh5ej71u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yangezhu.forumproject",
+            "certificate_hash": "b91505bfb732e32b85c75705cd8479323cfb06bf"
+          }
+        },
+        {
           "client_id": "947906805793-k2id79arq8b7ke4f6h9cet2vqttdbn4e.apps.googleusercontent.com",
           "client_type": 3
         }

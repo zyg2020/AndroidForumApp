@@ -8,11 +8,20 @@ public class Comment {
     private String content;
     private Date reply_date;
     private String user_name;
+    private String name;
     private String user_id;
 
     private List<String> images;
 
     public Comment() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getComment_id() {

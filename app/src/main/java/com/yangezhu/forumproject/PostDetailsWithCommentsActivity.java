@@ -19,6 +19,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -106,13 +108,18 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
 
                 String username = SharedPreferencesManager.getInstance(this).getUsername();
                 String userId = SharedPreferencesManager.getInstance(this).getUserId();
-                if (TextUtils.isEmpty(username)){
-                    Toast.makeText(this, "Error occur when retrieving the username", Toast.LENGTH_LONG).show();
-                }else{
-                    Log.d("USERNAME_YZHU", username);
-                    Log.d("USERNAME_YZHU", userId);
-                    uploadComment(username, userId, comment_content, current_time, post_id);
-                }
+                GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(this);
+                String name = signInAccount.getDisplayName();
+//                if (TextUtils.isEmpty(username)){
+//                    Toast.makeText(this, "Error occur when retrieving the username", Toast.LENGTH_LONG).show();
+//                }else{
+//                    Log.d("USERNAME_YZHU", username);
+//                    Log.d("USERNAME_YZHU", userId);
+//                    uploadComment(username, name, userId, comment_content, current_time, post_id);
+//                }
+                Log.d("USERNAME_YZHU", username);
+                Log.d("USERNAME_YZHU", userId);
+                uploadComment(username, name, userId, comment_content, current_time, post_id);
 
             }
 
@@ -122,9 +129,10 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
         initiateRecycleViewForPostComments();
     }
 
-    private void uploadComment(String username, String userId, String comment_content, Date current_time, String post_id) {
+    private void uploadComment(String username, String name, String userId, String comment_content, Date current_time, String post_id) {
         Map<String, Object> comment_data = new HashMap<>();
         comment_data.put("user_name", username);
+        comment_data.put("name", name);
         comment_data.put("user_id", userId);
         comment_data.put("reply_date", current_time);
         comment_data.put("content", comment_content);
