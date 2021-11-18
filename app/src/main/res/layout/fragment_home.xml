@@ -36,4 +36,13 @@
         android:layout_below="@+id/textView2"
         />
 
+    <Button
+        android:id="@+id/btn_to_view_my_posts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Posts"
+        android:layout_below="@+id/textView3"
+        android:layout_margin="20dp"
+        />
+
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.yangezhu.forumproject.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -18,7 +20,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.yangezhu.forumproject.InitialLoginActivity;
+import com.yangezhu.forumproject.MyPostsActivity;
 import com.yangezhu.forumproject.R;
+import com.yangezhu.forumproject.RegisterActivity;
 import com.yangezhu.forumproject.utilities.SharedPreferencesManager;
 
 import java.util.HashMap;
@@ -35,12 +40,11 @@ public class HomeFragment extends Fragment {
     private TextView textView1;
     private TextView textView2;
     private TextView textView3;
+    private Button btn_to_view_my_posts;
 
     public HomeFragment() {
         // Required empty public constructor
     }
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,6 +87,12 @@ public class HomeFragment extends Fragment {
         textView2 = (TextView) view.findViewById(R.id.textView2);
         textView3 = (TextView) view.findViewById(R.id.textView3);
 
+        btn_to_view_my_posts = (Button) view.findViewById(R.id.btn_to_view_my_posts);
+        btn_to_view_my_posts.setOnClickListener(view1 -> {
+            // sdf
+            Intent intent = new Intent(getContext(), MyPostsActivity.class);
+            startActivity(intent);
+        });
         GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(getContext());
         if(signInAccount != null){
             textView1.setText("getDisplayName" + signInAccount.getDisplayName());

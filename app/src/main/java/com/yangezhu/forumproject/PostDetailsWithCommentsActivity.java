@@ -62,6 +62,9 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
     private EditText edt_input_comment_box;
     private Post selected_post;
 
+    private Button delete;
+    private Button update;
+
     private FirebaseFirestore firestore;
     private PostImageAdapter postImageAdapter;
     private CommentListAdapter commentListAdapter;
@@ -109,7 +112,11 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
                 String username = SharedPreferencesManager.getInstance(this).getUsername();
                 String userId = SharedPreferencesManager.getInstance(this).getUserId();
                 GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(this);
-                String name = signInAccount.getDisplayName();
+                String name = "";
+                if (signInAccount != null){
+                    name = signInAccount.getDisplayName();
+                }
+
 //                if (TextUtils.isEmpty(username)){
 //                    Toast.makeText(this, "Error occur when retrieving the username", Toast.LENGTH_LONG).show();
 //                }else{
@@ -127,6 +134,24 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
 
         initiateRecycleViewForPostImages();
         initiateRecycleViewForPostComments();
+
+        delete = (Button) findViewById(R.id.delete);
+        update = (Button)findViewById(R.id.update);
+
+        Intent intent = getIntent();
+        String from_which_activity = intent.getStringExtra("Activity");
+        if (from_which_activity.equals("FROM_MY_POSTS")){
+            delete.setVisibility(View.VISIBLE);
+            update.setVisibility(View.VISIBLE);
+
+            delete.setOnClickListener(view -> {
+                Toast.makeText(this, "delete clicked", Toast.LENGTH_SHORT).show();
+            });
+
+            update.setOnClickListener(view -> {
+                Toast.makeText(this, "update clicked", Toast.LENGTH_SHORT).show();
+            });
+        }
     }
 
     private void uploadComment(String username, String name, String userId, String comment_content, Date current_time, String post_id) {
