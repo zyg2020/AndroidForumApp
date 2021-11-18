@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/post_title"
         android:layout_marginBottom="10dp"
+        android:width="260dp"
         android:text="post_description"
         android:textAlignment="textStart"
         android:textSize="12sp" />

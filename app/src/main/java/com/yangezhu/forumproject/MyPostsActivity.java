@@ -50,6 +50,7 @@ public class MyPostsActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
 
         posts_list = new ArrayList<>();
+        posts_list.clear();
         postListAdapter = new MyPostsListAdapter(posts_list, this);
 
         recycle_view_my_posts = (RecyclerView)findViewById(R.id.recycle_view_my_posts);
@@ -72,9 +73,12 @@ public class MyPostsActivity extends AppCompatActivity {
             public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException error) {
                 if (error != null){
                     Log.d(TAG, "Error: " + error.getMessage());
-                }else{
+                }
+                if(documentSnapshots != null){
                     for (DocumentChange documentChange: documentSnapshots.getDocumentChanges()){
                         if (documentChange.getType() == DocumentChange.Type.ADDED){
+                            // Toast.makeText(MyPostsActivity.this, "Add successfully ", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "Add successfully");
                             QueryDocumentSnapshot queryDocumentSnapshot = documentChange.getDocument();
                             Post post = queryDocumentSnapshot.toObject(Post.class);
                             post.setPost_id(queryDocumentSnapshot.getId());
@@ -93,6 +97,9 @@ public class MyPostsActivity extends AppCompatActivity {
                         }
                     }
                 }
+
+
+
             }
         });
 
