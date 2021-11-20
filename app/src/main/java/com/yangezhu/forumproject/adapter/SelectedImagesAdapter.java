@@ -25,14 +25,17 @@ import com.yangezhu.forumproject.utilities.DateUtilities;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SelectedImagesAdapter extends RecyclerView.Adapter<SelectedImagesAdapter.ViewHolder> {
 
     public ArrayList<Uri> image_uri_list;
     private Context mContext;
+    public Map<Uri, String> selected_images_key_uploaded_url_value;
 
-    public SelectedImagesAdapter(ArrayList<Uri> image_uri_list, Context context){
+    public SelectedImagesAdapter(ArrayList<Uri> image_uri_list, Map<Uri, String> selected_images_key_uploaded_url_value, Context context){
         this.image_uri_list = image_uri_list;
+        this.selected_images_key_uploaded_url_value = selected_images_key_uploaded_url_value;
         this.mContext = context;
     }
 
@@ -46,11 +49,12 @@ public class SelectedImagesAdapter extends RecyclerView.Adapter<SelectedImagesAd
     @Override
     public void onBindViewHolder(@NonNull SelectedImagesAdapter.ViewHolder holder, int position) {
         Picasso.get().load(image_uri_list.get(position)).resize(130, 130).into(holder.image_view_selected_image);
-        holder.btn_deselect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(mContext, "Deselect", Toast.LENGTH_SHORT).show();
-            }
+        holder.btn_deselect.setOnClickListener(view -> {
+            selected_images_key_uploaded_url_value.remove(image_uri_list.get(position));
+            image_uri_list.remove(position);
+            Toast.makeText(mContext, "Deselect", Toast.LENGTH_SHORT).show();
+            notifyDataSetChanged();
+
         });
     }
 

@@ -218,7 +218,7 @@ public class AddPostFragment extends Fragment {
         });
 
         uploaded_images_uri_list.clear();
-        selectedImagesAdapter = new SelectedImagesAdapter(uploaded_images_uri_list, getContext());
+        selectedImagesAdapter = new SelectedImagesAdapter(uploaded_images_uri_list, selected_images_key_uploaded_url_value, getContext());
 
         recycle_view_selected_images = (RecyclerView) view.findViewById(R.id.recycle_view_selected_images);
         recycle_view_selected_images.setHasFixedSize(true);
@@ -228,9 +228,6 @@ public class AddPostFragment extends Fragment {
         recycle_view_selected_images.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         // Add devide bar
-//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), linearLayoutManager.getOrientation());
-//        recycle_view_selected_images.addItemDecoration(dividerItemDecoration);
-
         recycle_view_selected_images.addItemDecoration(
                 new DividerItemDecoration(getContext(),
                         DividerItemDecoration.HORIZONTAL));
