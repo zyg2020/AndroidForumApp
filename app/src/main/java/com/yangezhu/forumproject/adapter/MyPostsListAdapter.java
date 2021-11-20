@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.yangezhu.forumproject.PostDetailsWithCommentsActivity;
 import com.yangezhu.forumproject.R;
+import com.yangezhu.forumproject.UpdatePostActivity;
 import com.yangezhu.forumproject.model.Post;
 import com.yangezhu.forumproject.utilities.DateUtilities;
 
@@ -78,6 +79,13 @@ public class MyPostsListAdapter extends RecyclerView.Adapter<MyPostsListAdapter.
 
         holder.btn_update_post.setOnClickListener(view -> {
             Toast.makeText(mContext, "Update clicked", Toast.LENGTH_SHORT).show();
+            Gson gson = new Gson();
+            String stringifiedPost = gson.toJson(posts_list.get(position));
+
+            Intent intent = new Intent(mContext, UpdatePostActivity.class);
+            intent.putExtra(SELECTED_POST, stringifiedPost);
+            intent.putExtra("Activity", "FROM_MY_POSTS_LIST");
+            mContext.startActivity(intent);
         });
 
         holder.itemView.setOnClickListener(view -> {

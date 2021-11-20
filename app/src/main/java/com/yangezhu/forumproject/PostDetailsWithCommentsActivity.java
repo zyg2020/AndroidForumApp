@@ -161,6 +161,11 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
 
             update.setOnClickListener(view -> {
                 Toast.makeText(this, "update clicked", Toast.LENGTH_SHORT).show();
+
+                Intent intent_update = new Intent(PostDetailsWithCommentsActivity.this, UpdatePostActivity.class);
+                intent_update.putExtra("SELECTED_POST", getIntent().getStringExtra(PostListAdapter.SELECTED_POST));
+                intent_update.putExtra("Activity", "FROM_MY_POST_DETAILS");
+                PostDetailsWithCommentsActivity.this.startActivity(intent_update);
             });
         }
     }
