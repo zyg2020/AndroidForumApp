@@ -145,7 +145,18 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
             update.setVisibility(View.VISIBLE);
 
             delete.setOnClickListener(view -> {
-                Toast.makeText(this, "delete clicked", Toast.LENGTH_SHORT).show();
+
+                firestore.collection("posts").document(selected_post.getPost_id())
+                        .delete()
+                        .addOnSuccessListener(unused -> {
+//                        posts_list.remove(position);
+//                        notifyItemRemoved(position);
+                          Toast.makeText(PostDetailsWithCommentsActivity.this, "Delete successfully ", Toast.LENGTH_SHORT).show();
+                            finish();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(PostDetailsWithCommentsActivity.this, "Error deleting document", Toast.LENGTH_SHORT).show();
+                        });
             });
 
             update.setOnClickListener(view -> {

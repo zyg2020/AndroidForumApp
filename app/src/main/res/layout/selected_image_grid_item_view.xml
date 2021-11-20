@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_height="130dp"
+        android:layout_width="130dp"
+        android:layout_margin="10dp"
+        android:id="@+id/image_view_selected_image"
+        android:src="@mipmap/ic_launcher_round"
+        android:scaleType="fitXY"
+        android:layout_centerInParent="true"
+        />
+
+    <ImageButton
+        android:id="@+id/btn_deselect"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="-30dp"
+        android:layout_marginTop="-3dp"
+        android:layout_toRightOf="@+id/image_view_selected_image"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_delete"
+        app:tint="#c90a08" />
+</RelativeLayout>

@@ -67,17 +67,29 @@ public class MyPostsActivity extends AppCompatActivity {
         recycle_view_my_posts.setAdapter(postListAdapter);
 
         userId = SharedPreferencesManager.getInstance(this).getUserId();
+    }
 
+    @Override
+    protected void onResume() {
+        Toast.makeText(MyPostsActivity.this, "Reload my posts.", Toast.LENGTH_SHORT).show();
+        posts_list.clear();
+        postListAdapter.notifyDataSetChanged();
+        InitiateMyPostsList();
+        super.onResume();
+    }
+
+    private void InitiateMyPostsList() {
         firestore.collection("posts").whereEqualTo("user_id", userId).orderBy("publish_date", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException error) {
                 if (error != null){
                     Log.d(TAG, "Error: " + error.getMessage());
+                    return;
                 }
-                if(documentSnapshots != null){
-                    for (DocumentChange documentChange: documentSnapshots.getDocumentChanges()){
-                        if (documentChange.getType() == DocumentChange.Type.ADDED){
-                            // Toast.makeText(MyPostsActivity.this, "Add successfully ", Toast.LENGTH_SHORT).show();
+
+                for (DocumentChange documentChange: documentSnapshots.getDocumentChanges()){
+                    switch (documentChange.getType()) {
+                        case ADDED:
                             Log.d(TAG, "Add successfully");
                             QueryDocumentSnapshot queryDocumentSnapshot = documentChange.getDocument();
                             Post post = queryDocumentSnapshot.toObject(Post.class);
@@ -94,14 +106,17 @@ public class MyPostsActivity extends AppCompatActivity {
                             Log.d(TAG, "name: " + post.getTitle());
                             Log.d(TAG, "description: " + post.getDescription());
                             Log.d(TAG, "images: " + gson.toJson(post.getImages()));
-                        }
+                            break;
+                        case MODIFIED:
+                            Log.d(TAG, "Modified city: " + documentChange.getDocument().getData());
+                            break;
+                        case REMOVED:
+                            Toast.makeText(MyPostsActivity.this, "trigger removed document change type", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "Removed city: " + documentChange.getDocument().getData());
+                            break;
                     }
                 }
-
-
-
             }
         });
-
     }
 }

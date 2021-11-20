@@ -10,6 +10,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -42,6 +46,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.yangezhu.forumproject.MainActivity;
 import com.yangezhu.forumproject.R;
+import com.yangezhu.forumproject.adapter.SelectedImagesAdapter;
 import com.yangezhu.forumproject.utilities.DateUtilities;
 
 import java.text.SimpleDateFormat;
@@ -67,6 +72,9 @@ public class AddPostFragment extends Fragment {
     private Button btn_post;
 
     private TextView txt_display_upload_images;
+
+    private RecyclerView recycle_view_selected_images;
+    private SelectedImagesAdapter selectedImagesAdapter;
 
     ArrayList<Uri> uploaded_images_uri_list = new ArrayList<Uri>();
     Map<Uri, String> selected_images_key_uploaded_url_value = new HashMap<>();
@@ -209,6 +217,30 @@ public class AddPostFragment extends Fragment {
             }
         });
 
+        uploaded_images_uri_list.clear();
+        selectedImagesAdapter = new SelectedImagesAdapter(uploaded_images_uri_list, getContext());
+
+        recycle_view_selected_images = (RecyclerView) view.findViewById(R.id.recycle_view_selected_images);
+        recycle_view_selected_images.setHasFixedSize(true);
+
+        // Set recyclerView orientation.
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        recycle_view_selected_images.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+        // Add devide bar
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), linearLayoutManager.getOrientation());
+//        recycle_view_selected_images.addItemDecoration(dividerItemDecoration);
+
+        recycle_view_selected_images.addItemDecoration(
+                new DividerItemDecoration(getContext(),
+                        DividerItemDecoration.HORIZONTAL));
+        recycle_view_selected_images.addItemDecoration(
+                new DividerItemDecoration(getContext(),
+                        DividerItemDecoration.VERTICAL)
+        );
+
+        recycle_view_selected_images.setAdapter(selectedImagesAdapter);
+
         return view;
     }
 
@@ -288,6 +320,7 @@ public class AddPostFragment extends Fragment {
                     Log.d("YZHU_IMAGE_SELECT", "One image --> " + imagePath);
                     Uri mImageUri=data.getData();
                     uploaded_images_uri_list.add(mImageUri);
+                    selectedImagesAdapter.notifyDataSetChanged();
                     selected_images_key_uploaded_url_value.put(mImageUri, "");
 
                     String display_text = "";
