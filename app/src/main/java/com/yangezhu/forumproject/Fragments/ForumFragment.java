@@ -14,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
@@ -25,6 +27,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
+import com.yangezhu.forumproject.MainActivity;
 import com.yangezhu.forumproject.R;
 import com.yangezhu.forumproject.adapter.PostListAdapter;
 import com.yangezhu.forumproject.model.Post;
@@ -85,11 +88,51 @@ public class ForumFragment extends Fragment {
 
         recycle_view_posts_entries_list.setAdapter(postListAdapter);
 
-        firestore.collection("posts").orderBy("publish_date", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        loadPosts("Used Items");
+
+        BottomNavigationView forumTypeNavigationView = (BottomNavigationView)view.findViewById(R.id.bottom_navigation);
+
+        forumTypeNavigationView.setOnNavigationItemSelectedListener(item -> {
+
+            boolean render = true;
+            String tag = "";
+            switch (item.getItemId()){
+                case R.id.used_items_type:
+                    Toast.makeText(getContext(), "used_items_type", Toast.LENGTH_SHORT).show();
+                    loadPosts("Used Items");
+                    break;
+                case R.id.used_cars_type:
+                    Toast.makeText(getContext(), "used_cars_type", Toast.LENGTH_SHORT).show();
+                    loadPosts("Used Cars");
+                    break;
+                case R.id.rent_type:
+                    Toast.makeText(getContext(), "rent_type", Toast.LENGTH_SHORT).show();
+                    loadPosts("Rent");
+                    break;
+                case R.id.marketing_type:
+                    Toast.makeText(getContext(), "marketing_type", Toast.LENGTH_SHORT).show();
+                    loadPosts("Marketing");
+                    break;
+            }
+
+            return true;
+        });
+
+        return view;
+    }
+
+    private void loadPosts(String category) {
+        if (posts_list != null){
+            posts_list.clear();
+            postListAdapter.notifyDataSetChanged();
+        }
+
+        firestore.collection("posts").whereEqualTo("category", category).orderBy("publish_date", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException error) {
                 if (error != null){
                     Log.d(TAG, "Error: " + error.getMessage());
+                    return;
                 }
 
                 for (DocumentChange documentChange: documentSnapshots.getDocumentChanges()){
@@ -106,12 +149,11 @@ public class ForumFragment extends Fragment {
                         Gson gson = new Gson();
 
                         Log.d(TAG, "name: " + name);
+                        Log.d(TAG, "category: " + documentChange.getDocument().getString("category"));
                         Log.d(TAG, "images: " + gson.toJson(images));
                     }
                 }
             }
         });
-
-        return view;
     }
 }
