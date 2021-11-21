@@ -3,6 +3,7 @@ package com.yangezhu.forumproject;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -91,7 +93,12 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
         post_username.setText(selected_post.getUser_name());
         post_publish_time.setText(DateUtilities.timeFormatterWithYear(selected_post.getPublish_date()));
 
-
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(selected_post.getTitle());
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         firestore = FirebaseFirestore.getInstance();
 
@@ -178,6 +185,10 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
             if (task.isSuccessful()){
                 DocumentSnapshot document = task.getResult();
                 Post new_post = document.toObject(Post.class);
+
+                if(getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle(new_post.getTitle());
+                }
 
                 post_title.setText(new_post.getTitle());
                 post_description.setText(new_post.getDescription());
@@ -273,5 +284,15 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
          recycle_view_post_images.setAdapter(postImageAdapter);
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

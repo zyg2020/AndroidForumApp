@@ -7,9 +7,19 @@
     android:background="@color/primaryTextColor"
     tools:context=".PostDetailsWithCommentsActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_500"
+        android:elevation="4dp"
+        android:theme="@style/Theme.ForumProject"
+        app:popupTheme="@style/Theme.MaterialComponents.DayNight" />
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/my_toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
