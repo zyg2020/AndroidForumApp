@@ -1,5 +1,6 @@
 package com.yangezhu.forumproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -26,15 +27,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.yangezhu.forumproject.adapter.PostListAdapter;
-import com.yangezhu.forumproject.adapter.SelectedImagesAdapter;
+import com.yangezhu.forumproject.adapter.SelectedImagesWhenUpdateAdapter;
 import com.yangezhu.forumproject.model.Post;
 
 import java.util.ArrayList;
@@ -57,7 +63,8 @@ public class UpdatePostActivity extends AppCompatActivity {
     private TextView txt_display_upload_images;
 
     private RecyclerView recycle_view_selected_images;
-    private SelectedImagesAdapter selectedImagesAdapter;
+    private SelectedImagesWhenUpdateAdapter selectedImagesWhenUpdateAdapter;
+    private List<String> selected_post_images_urls;
 
     ArrayList<Uri> uploaded_images_uri_list = new ArrayList<Uri>();
     Map<Uri, String> selected_images_key_uploaded_url_value = new HashMap<>();
@@ -78,6 +85,8 @@ public class UpdatePostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_add_post);
+
+        progressDialog = new ProgressDialog(this);
 
         category_spinner = (Spinner) findViewById(R.id.category);
         category_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -113,12 +122,14 @@ public class UpdatePostActivity extends AppCompatActivity {
             startActivityForResult(Intent.createChooser(intent,"Select Picture"), PICK_IMAGE_MULTIPLE);
         });
 
-
         txt_display_upload_images = (TextView) findViewById(R.id.txt_display_upload_images);
         edt_title = (EditText) findViewById(R.id.title) ;
         edt_description = (EditText) findViewById(R.id.description) ;
         btn_post= (Button) findViewById(R.id.btn_add_post);
         btn_post.setText("Update");
+
+        auth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
         btn_post.setOnClickListener(view12 -> {
 
@@ -140,61 +151,27 @@ public class UpdatePostActivity extends AppCompatActivity {
 
                 // String current_time = DateUtilities.getCurrentTime();
                 Date current_time =new Date();
-                auth = FirebaseAuth.getInstance();
-                firestore = FirebaseFirestore.getInstance();
 
                 String user_id = auth.getCurrentUser().getUid();
-                firestore.collection("users").document(user_id).get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        DocumentSnapshot document = task.getResult();
-                        username = document.getString ("username");
-
-                        if (uploaded_images_uri_list.size() > 0){
-                            List<String> uploaded_images_url = new ArrayList<String>();
-
-                            boolean complete_upload = false;
-                            for (int i = 0; i < uploaded_images_uri_list.size(); i++) {
-                                StorageReference fileRef = FirebaseStorage.getInstance().getReference()
-                                        .child("uploads").child(System.currentTimeMillis() + "." + getFileExtension(uploaded_images_uri_list.get(i)));
-                                int current_index = i;
-                                fileRef.putFile(uploaded_images_uri_list.get(i)).addOnCompleteListener(task1 -> fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                                    String url = uri.toString();
-
-                                    uploaded_images_url.add(url);
-
-                                    selected_images_key_uploaded_url_value.put(uploaded_images_uri_list.get(current_index), url);
-                                    Log.d("YZHU_DATA_SUBMIT", "One image uploaded: " + url);
-//                                    if (current_index == uploaded_images_uri_list.size()-1){
-//                                        uploadPost(title, description, current_time, user_id, username, selected_category, uploaded_images_url);
-//                                    }
-
-                                    if (uploaded_images_url.size() == uploaded_images_uri_list.size()){
-                                        updatePost(title, description, current_time, user_id, username, selected_category, uploaded_images_url);
-                                    }
-                                }));
-                            }
-                        }else{
-                            updatePost(title, description, current_time, user_id, username, selected_category, new ArrayList<String>());
-                        }
-
-                        Log.d("YZHU_DATA_SUBMIT", "title: " + title);
-                        Log.d("YZHU_DATA_SUBMIT", "description: " + description);
-                        Log.d("YZHU_DATA_SUBMIT", "publish_date: " + current_time.toString());
-
-                        Log.d("YZHU_DATA_SUBMIT", "user_id: " + user_id);
-                        Log.d("YZHU_DATA_SUBMIT", "username: " + username);
-                        Log.d("YZHU_DATA_SUBMIT", "category: " + selected_category);
-                        for (int i = 0; i < uploaded_images_uri_list.size(); i++) {
-                            Log.d("YZHU_DATA_SUBMIT", "Multiple images --> " + uploaded_images_uri_list.get(i).toString());
-                        }
+                DocumentReference post_ref = firestore.collection("posts").document(selected_post.getPost_id());
+                post_ref.update("title", title, "description", description,"category", selected_category ).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(UpdatePostActivity.this,"Update successfully.", Toast.LENGTH_LONG).show();
+                        progressDialog.dismiss();
+                        onBackPressed();
                     }
                 });
+
             }
         });
-
+        Gson gson = new Gson();
+        selected_post = gson.fromJson(getIntent().getStringExtra(PostListAdapter.SELECTED_POST), Post.class);
 
         uploaded_images_uri_list.clear();
-        selectedImagesAdapter = new SelectedImagesAdapter(uploaded_images_uri_list, selected_images_key_uploaded_url_value, this);
+
+        selected_post_images_urls = selected_post.getImages();
+        selectedImagesWhenUpdateAdapter = new SelectedImagesWhenUpdateAdapter(selected_post_images_urls, selected_post.getPost_id(),this);
 
         recycle_view_selected_images = (RecyclerView) findViewById(R.id.recycle_view_selected_images);
         recycle_view_selected_images.setHasFixedSize(true);
@@ -212,40 +189,13 @@ public class UpdatePostActivity extends AppCompatActivity {
                         DividerItemDecoration.VERTICAL)
         );
 
-        recycle_view_selected_images.setAdapter(selectedImagesAdapter);
-
-
-        Gson gson = new Gson();
-        selected_post = gson.fromJson(getIntent().getStringExtra(PostListAdapter.SELECTED_POST), Post.class);
+        recycle_view_selected_images.setAdapter(selectedImagesWhenUpdateAdapter);
 
         edt_title.setText(selected_post.getTitle());
         edt_description.setText(selected_post.getDescription());
 
         //categories_list.indexOf(selected_post.getCategory())
         category_spinner.setSelection(categories_list.indexOf(selected_post.getCategory()));
-
-    }
-
-    private void updatePost(String title, String description, Date current_time, String user_id, String username, String selected_category, List<String> uploaded_images_url) {
-        for (int i = 0; i < uploaded_images_url.size(); i++) {
-            Log.d("YZHU_DATA_SUBMIT", "Multiple images --> " + uploaded_images_url.get(i));
-        }
-
-        uploaded_images_url.clear();
-        for (int i = 0; i < uploaded_images_uri_list.size(); i++) {
-            uploaded_images_url.add(selected_images_key_uploaded_url_value.get(uploaded_images_uri_list.get(i)));
-            Log.d("YZHU_Correct_ORDER", "Multiple images --> " + uploaded_images_url.get(i));
-        }
-
-        Map<String, Object> post_date_map = new HashMap<>();
-        post_date_map.put("title", title);
-        post_date_map.put("description", description);
-        post_date_map.put("publish_date", current_time);
-        post_date_map.put("user_id", user_id);
-        post_date_map.put("user_name", username);
-        post_date_map.put("category", selected_category);
-        post_date_map.put("images", uploaded_images_url);
-
 
     }
 
@@ -261,6 +211,8 @@ public class UpdatePostActivity extends AppCompatActivity {
             // When an Image is picked
             if (requestCode == PICK_IMAGE_MULTIPLE && resultCode == Activity.RESULT_OK && null != data) {
                 // Get the Image from data
+                progressDialog.setMessage("Updating...");
+                progressDialog.show();
 
                 String[] filePathColumn = { MediaStore.Images.Media.DATA };
                 imagesEncodedList = new ArrayList<String>();
@@ -268,18 +220,35 @@ public class UpdatePostActivity extends AppCompatActivity {
                     String imagePath = data.getData().getPath();
                     Log.d("YZHU_IMAGE_SELECT", "One image --> " + imagePath);
                     Uri mImageUri=data.getData();
-                    uploaded_images_uri_list.add(mImageUri);
-                    selectedImagesAdapter.notifyDataSetChanged();
-                    selected_images_key_uploaded_url_value.put(mImageUri, "");
+//                    uploaded_images_uri_list.add(mImageUri);
+//                    selectedImagesWhenUpdateAdapter.notifyDataSetChanged();
+//                    selected_images_key_uploaded_url_value.put(mImageUri, "");
 
-                    String display_text = "";
-                    for (int i = 0; i < uploaded_images_uri_list.size(); i++) {
+                    StorageReference fileRef = FirebaseStorage
+                            .getInstance()
+                            .getReference()
+                            .child("uploads").child(System.currentTimeMillis() + "." + getFileExtension(mImageUri));
 
-                        display_text += uploaded_images_uri_list.get(i).toString() + "\n";
-                        Log.d("YZHU_IMAGE_SELECT", "Multiple images --> " + uploaded_images_uri_list.get(i));
-                    }
-                    txt_display_upload_images.setText(display_text);
+                    fileRef.putFile(mImageUri).addOnCompleteListener(task1 -> fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String url = uri.toString();
 
+                        // selected_post.getImages().add(url);
+
+                        String post_id = selected_post.getPost_id();
+                        DocumentReference post_ref = firestore.collection("posts").document(post_id);
+                        post_ref.update("images", FieldValue.arrayUnion(url)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(UpdatePostActivity.this, "Update successfully", Toast.LENGTH_SHORT).show();
+
+                                selected_post_images_urls.add(url);
+                                progressDialog.dismiss();
+
+                                selectedImagesWhenUpdateAdapter.notifyDataSetChanged();
+                            }
+                        });
+
+                    }));
                 } else {
                     if (data.getClipData() != null) {
                         ClipData mClipData = data.getClipData();

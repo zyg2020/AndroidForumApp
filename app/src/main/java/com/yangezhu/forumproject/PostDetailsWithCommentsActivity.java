@@ -88,16 +88,12 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
         Gson gson = new Gson();
         selected_post = gson.fromJson(getIntent().getStringExtra(PostListAdapter.SELECTED_POST), Post.class);
 
-        post_title.setText(selected_post.getTitle());
         post_username.setText(selected_post.getUser_name());
         post_publish_time.setText(DateUtilities.timeFormatterWithYear(selected_post.getPublish_date()));
 
-        post_description.setText(selected_post.getDescription());
+
 
         firestore = FirebaseFirestore.getInstance();
-
-        post_images_list = selected_post.getImages();
-        postImageAdapter = new PostImageAdapter(post_images_list, this);
 
         btn_reply = (Button) findViewById(R.id.btn_reply);
         btn_reply.setOnClickListener(view -> {
@@ -132,7 +128,7 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
 
         });
 
-        initiateRecycleViewForPostImages();
+
         initiateRecycleViewForPostComments();
 
         delete = (Button) findViewById(R.id.delete);
@@ -168,6 +164,32 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
                 PostDetailsWithCommentsActivity.this.startActivity(intent_update);
             });
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reloadPost();
+    }
+
+    private void reloadPost() {
+
+        firestore.collection("posts").document(selected_post.getPost_id()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                DocumentSnapshot document = task.getResult();
+                Post new_post = document.toObject(Post.class);
+
+                post_title.setText(new_post.getTitle());
+                post_description.setText(new_post.getDescription());
+
+                post_images_list = new_post.getImages();
+                postImageAdapter = new PostImageAdapter(post_images_list, PostDetailsWithCommentsActivity.this);
+
+                initiateRecycleViewForPostImages();
+            }
+        });
+
+
     }
 
     private void uploadComment(String username, String name, String userId, String comment_content, Date current_time, String post_id) {
