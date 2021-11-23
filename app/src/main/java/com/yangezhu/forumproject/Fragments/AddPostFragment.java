@@ -7,11 +7,13 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -108,6 +110,14 @@ public class AddPostFragment extends Fragment {
     private BottomNavigationView bottomNavigationView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        boolean chk_night = sp.getBoolean("NIGHT", false);
+        if (chk_night){
+            getActivity().setTheme(R.style.ForumProjectNight);
+        }else{
+            getActivity().setTheme(R.style.ForumProjectDay);
+        }
 
         super.onCreate(savedInstanceState);
         bottomNavigationView = (BottomNavigationView)getActivity().findViewById(R.id.bottom_navigation);
@@ -280,26 +290,40 @@ public class AddPostFragment extends Fragment {
             container_relativeLayout.setBackgroundColor(Color.parseColor("#222222"));
             bottomNavigationView.setBackgroundColor(Color.parseColor("#222222"));
 
-            edt_title.setTextColor(Color.parseColor("#b5b5b5"));
-            edt_description.setTextColor(Color.parseColor("#b5b5b5"));
-            btn_upload_images.setTextColor(Color.parseColor("#b5b5b5"));
-            btn_post.setTextColor(Color.parseColor("#b5b5b5"));
+            btn_upload_images.setTextColor(Color.parseColor("#222222"));
+            btn_post.setTextColor(Color.parseColor("#222222"));
+
             titleTextView.setTextColor(Color.parseColor("#b5b5b5"));
             descriptionTextView.setTextColor(Color.parseColor("#b5b5b5"));
             categoryTextView.setTextColor(Color.parseColor("#b5b5b5"));
             uploadImagesTextView.setTextColor(Color.parseColor("#b5b5b5"));
+
+            edt_title.setTextColor(Color.parseColor("#b5b5b5"));
+            edt_description.setTextColor(Color.parseColor("#b5b5b5"));
+            edt_title.setHintTextColor(Color.parseColor("#b5b5b5"));
+            edt_description.setHintTextColor(Color.parseColor("#b5b5b5"));
+
+            ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor("#b5b5b5"));
+            ViewCompat.setBackgroundTintList(edt_title, colorStateList);
+            ViewCompat.setBackgroundTintList(edt_description, colorStateList);
+
         }else{
             container_relativeLayout.setBackgroundColor(Color.parseColor("#ffffff"));
             bottomNavigationView.setBackgroundColor(Color.parseColor("#ffffff"));
 
-            edt_title.setTextColor(Color.parseColor("#333333"));
-            edt_description.setTextColor(Color.parseColor("#333333"));
             btn_upload_images.setTextColor(Color.parseColor("#ffffff"));
             btn_post.setTextColor(Color.parseColor("#ffffff"));
+
+            edt_title.setTextColor(Color.parseColor("#333333"));
+            edt_description.setTextColor(Color.parseColor("#333333"));
             titleTextView.setTextColor(Color.parseColor("#333333"));
             descriptionTextView.setTextColor(Color.parseColor("#333333"));
             categoryTextView.setTextColor(Color.parseColor("#333333"));
             uploadImagesTextView.setTextColor(Color.parseColor("#333333"));
+
+            ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor("#333333"));
+            ViewCompat.setBackgroundTintList(edt_title, colorStateList);
+            ViewCompat.setBackgroundTintList(edt_description, colorStateList);
         }
 
         String orien = sp.getString("ORIENTATION", "false");

@@ -33,6 +33,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean chk_night = sp.getBoolean("NIGHT", false);
+        if (chk_night){
+            setTheme(R.style.ForumProjectNight);
+
+        }else{
+            setTheme(R.style.ForumProjectDay);
+        }
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

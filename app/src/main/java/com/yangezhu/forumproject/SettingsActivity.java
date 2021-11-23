@@ -18,7 +18,21 @@ public class SettingsActivity extends PreferenceActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean chk_night = sp.getBoolean("NIGHT", false);
+        if (chk_night){
+            getListView().setBackgroundColor(Color.parseColor("#222222"));
+            setTheme(R.style.ForumProjectNight);
+            super.onCreate(savedInstanceState);
+        }else{
+            getListView().setBackgroundColor(Color.parseColor("#ffffff"));
+            setTheme(R.style.ForumProjectDay);
+            super.onCreate(savedInstanceState);
+        }
+
+
         addPreferencesFromResource(R.xml.settings);
         load_settings();
     }
@@ -35,8 +49,10 @@ public class SettingsActivity extends PreferenceActivity {
         boolean chk_night = sp.getBoolean("NIGHT", false);
         if (chk_night){
             getListView().setBackgroundColor(Color.parseColor("#222222"));
+            setTheme(R.style.ForumProjectNight);
         }else{
             getListView().setBackgroundColor(Color.parseColor("#ffffff"));
+            setTheme(R.style.ForumProjectDay);
         }
 
         CheckBoxPreference chk_night_instance = (CheckBoxPreference)findPreference("NIGHT");
@@ -48,8 +64,14 @@ public class SettingsActivity extends PreferenceActivity {
 
                 if (yes){
                     getListView().setBackgroundColor(Color.parseColor("#222222"));
+                    setTheme(R.style.ForumProjectNight);
+                    finish();
+                    startActivity(getIntent());
                 }else{
                     getListView().setBackgroundColor(Color.parseColor("#ffffff"));
+                    setTheme(R.style.ForumProjectDay);
+                    finish();
+                    startActivity(getIntent());
                 }
 
                 return true;

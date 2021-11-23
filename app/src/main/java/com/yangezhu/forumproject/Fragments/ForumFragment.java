@@ -60,6 +60,15 @@ public class ForumFragment extends Fragment {
     private BottomNavigationView forumTypeNavigationView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        boolean chk_night = sp.getBoolean("NIGHT", false);
+        if (chk_night){
+            getActivity().setTheme(R.style.ForumProjectNight);
+        }else{
+            getActivity().setTheme(R.style.ForumProjectDay);
+        }
+
         super.onCreate(savedInstanceState);
         bottomNavigationView = (BottomNavigationView)getActivity().findViewById(R.id.bottom_navigation);
         auth = FirebaseAuth.getInstance();

@@ -48,6 +48,15 @@ public class NewsFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        boolean chk_night = sp.getBoolean("NIGHT", false);
+        if (chk_night){
+            getActivity().setTheme(R.style.ForumProjectNight);
+        }else{
+            getActivity().setTheme(R.style.ForumProjectDay);
+        }
+
         super.onCreate(savedInstanceState);
         bottomNavigationView = (BottomNavigationView)getActivity().findViewById(R.id.bottom_navigation);
         downloadAndParseRSS = (DownloadAndParseRSS) new DownloadAndParseRSS().execute("https://globalnews.ca/winnipeg/feed/");
