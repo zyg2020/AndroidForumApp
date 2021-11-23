@@ -4,10 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.ForumFragment">
+    tools:context=".Fragments.ForumFragment"
+    android:id="@+id/container">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+        android:id="@+id/forumTypeNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -18,6 +19,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/forumTypeNavigationView"
         >
         <LinearLayout
             android:layout_width="match_parent"

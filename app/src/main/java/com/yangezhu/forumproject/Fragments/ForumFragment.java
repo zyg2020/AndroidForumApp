@@ -1,5 +1,8 @@
 package com.yangezhu.forumproject.Fragments;
 
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -9,11 +12,13 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -50,11 +55,13 @@ public class ForumFragment extends Fragment {
     private RecyclerView recycle_view_posts_entries_list;
 
     private FloatingActionButton btn_add_post;
-
+    private RelativeLayout container_relativeLayout;
+    private BottomNavigationView bottomNavigationView;
+    private BottomNavigationView forumTypeNavigationView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        bottomNavigationView = (BottomNavigationView)getActivity().findViewById(R.id.bottom_navigation);
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
@@ -90,7 +97,7 @@ public class ForumFragment extends Fragment {
 
         loadPosts("Used Items");
 
-        BottomNavigationView forumTypeNavigationView = (BottomNavigationView)view.findViewById(R.id.bottom_navigation);
+        forumTypeNavigationView = (BottomNavigationView)view.findViewById(R.id.forumTypeNavigationView);
 
         forumTypeNavigationView.setOnNavigationItemSelectedListener(item -> {
 
@@ -118,7 +125,41 @@ public class ForumFragment extends Fragment {
             return true;
         });
 
+        container_relativeLayout = (RelativeLayout)view.findViewById(R.id.container);
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        load_settings();
+        if (postListAdapter!=null){
+            postListAdapter.notifyDataSetChanged();
+        }
+        super.onResume();
+    }
+
+    private void load_settings(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        boolean chk_night = sp.getBoolean("NIGHT", false);
+        if (chk_night){
+            container_relativeLayout.setBackgroundColor(Color.parseColor("#222222"));
+            bottomNavigationView.setBackgroundColor(Color.parseColor("#222222"));
+            forumTypeNavigationView.setBackgroundColor(Color.parseColor("#222222"));
+        }else{
+            container_relativeLayout.setBackgroundColor(Color.parseColor("#ffffff"));
+            forumTypeNavigationView.setBackgroundColor(Color.parseColor("#ffffff"));
+            bottomNavigationView.setBackgroundColor(Color.parseColor("#ffffff"));
+        }
+
+        String orien = sp.getString("ORIENTATION", "false");
+        if ("Auto".equals(orien)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_BEHIND);
+        }else if ("Portrait".equals(orien)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }else if ("Landscape".equals(orien)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
     }
 
     private void loadPosts(String category) {

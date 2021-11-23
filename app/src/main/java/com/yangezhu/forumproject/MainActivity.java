@@ -6,10 +6,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -23,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
     private Fragment selectedFragment;
+    private RelativeLayout main_activity_container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
+        main_activity_container = (RelativeLayout)findViewById(R.id.main_activity_container);
         bottomNavigationView = (BottomNavigationView)findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
@@ -86,8 +94,32 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         });
-
+        load_settings();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new HomeFragment(), "HomeFragment").commit();
+
+    }
+
+    private void load_settings(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean chk_night = sp.getBoolean("NIGHT", false);
+        if (chk_night){
+            main_activity_container.setBackgroundColor(Color.parseColor("#222222"));
+            bottomNavigationView.setBackgroundColor(Color.parseColor("#222222"));
+
+        }else{
+            main_activity_container.setBackgroundColor(Color.parseColor("#ffffff"));
+            bottomNavigationView.setBackgroundColor(Color.parseColor("#ffffff"));
+        }
+
+        String orien = sp.getString("ORIENTATION", "false");
+        if ("Auto".equals(orien)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_BEHIND);
+        }else if ("Portrait".equals(orien)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }else if ("Landscape".equals(orien)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
     }
 
     @Override

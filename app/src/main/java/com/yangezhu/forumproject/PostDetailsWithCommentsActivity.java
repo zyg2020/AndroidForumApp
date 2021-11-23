@@ -11,13 +11,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +71,8 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
     private Button delete;
     private Button update;
 
+    private RelativeLayout container_layout;
+
     private FirebaseFirestore firestore;
     private PostImageAdapter postImageAdapter;
     private CommentListAdapter commentListAdapter;
@@ -80,6 +86,8 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_details_with_comments);
+
+        container_layout = (RelativeLayout) findViewById(R.id.container);
 
         post_title = (TextView) findViewById(R.id.post_title);
         post_username = (TextView) findViewById(R.id.post_username);
@@ -175,8 +183,47 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        load_settings();
         super.onResume();
         reloadPost();
+    }
+
+    private void load_settings(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean chk_night = sp.getBoolean("NIGHT", false);
+        if (chk_night){
+            container_layout.setBackgroundColor(Color.parseColor("#222222"));
+
+            post_title.setTextColor(Color.parseColor("#b5b5b5"));
+            post_username.setTextColor(Color.parseColor("#b5b5b5"));
+            post_publish_time.setTextColor(Color.parseColor("#b5b5b5"));
+            post_description.setTextColor(Color.parseColor("#b5b5b5"));
+            btn_reply.setTextColor(Color.parseColor("#b5b5b5"));
+            delete.setTextColor(Color.parseColor("#b5b5b5"));
+            update.setTextColor(Color.parseColor("#b5b5b5"));
+            edt_input_comment_box.setTextColor(Color.parseColor("#b5b5b5"));
+        }else{
+            container_layout.setBackgroundColor(Color.parseColor("#ffffff"));
+
+            post_title.setTextColor(Color.parseColor("#333333"));
+            post_username.setTextColor(Color.parseColor("#333333"));
+            post_publish_time.setTextColor(Color.parseColor("#333333"));
+            post_description.setTextColor(Color.parseColor("#333333"));
+            btn_reply.setTextColor(Color.parseColor("#ffffff"));
+            delete.setTextColor(Color.parseColor("#ffffff"));
+            update.setTextColor(Color.parseColor("#ffffff"));
+            edt_input_comment_box.setTextColor(Color.parseColor("#333333"));
+        }
+
+        String orien = sp.getString("ORIENTATION", "false");
+        if ("Auto".equals(orien)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_BEHIND);
+        }else if ("Portrait".equals(orien)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }else if ("Landscape".equals(orien)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
     }
 
     private void reloadPost() {

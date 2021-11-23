@@ -1,21 +1,27 @@
 package com.yangezhu.forumproject.Fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -37,10 +43,13 @@ public class HomeFragment extends Fragment {
     private FirebaseFirestore firestore;
 
     private String username;
+    private TextView initial_edit_text;
     private TextView textView1;
     private TextView textView2;
     private TextView textView3;
     private Button btn_to_view_my_posts;
+    private RelativeLayout container_relativeLayout;
+    private BottomNavigationView bottomNavigationView;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -49,8 +58,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        bottomNavigationView = (BottomNavigationView)getActivity().findViewById(R.id.bottom_navigation);
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
@@ -64,9 +72,9 @@ public class HomeFragment extends Fragment {
 
                     HomeFragment myFragment = (HomeFragment)getActivity().getSupportFragmentManager().findFragmentByTag("HomeFragment");
                     if (myFragment != null && myFragment.isVisible()) {
-                        TextView initial_edit_text = (TextView)getView().findViewById(R.id.initial_message);
+                        initial_edit_text = (TextView)getView().findViewById(R.id.initial_message);
                         initial_edit_text.setText("Hello, " + username);
-
+                        load_settings();
                         SharedPreferencesManager.getInstance(getContext()).setUsername(username);
                         SharedPreferencesManager.getInstance(getContext()).setUserId(user_id);
                     }
@@ -76,11 +84,52 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        load_settings();
+        super.onResume();
+    }
+
+    private void load_settings(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        boolean chk_night = sp.getBoolean("NIGHT", false);
+        if (chk_night){
+            container_relativeLayout.setBackgroundColor(Color.parseColor("#222222"));
+            bottomNavigationView.setBackgroundColor(Color.parseColor("#222222"));
+
+            textView1.setTextColor(Color.parseColor("#b5b5b5"));
+            textView2.setTextColor(Color.parseColor("#b5b5b5"));
+            textView3.setTextColor(Color.parseColor("#b5b5b5"));
+            btn_to_view_my_posts.setTextColor(Color.parseColor("#b5b5b5"));
+            initial_edit_text.setTextColor(Color.parseColor("#b5b5b5"));
+        }else{
+            container_relativeLayout.setBackgroundColor(Color.parseColor("#ffffff"));
+            bottomNavigationView.setBackgroundColor(Color.parseColor("#ffffff"));
+
+            textView1.setTextColor(Color.parseColor("#333333"));
+            textView2.setTextColor(Color.parseColor("#333333"));
+            textView3.setTextColor(Color.parseColor("#333333"));
+            btn_to_view_my_posts.setTextColor(Color.parseColor("#ffffff"));
+            initial_edit_text.setTextColor(Color.parseColor("#333333"));
+        }
+
+        String orien = sp.getString("ORIENTATION", "false");
+        if ("Auto".equals(orien)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_BEHIND);
+        }else if ("Portrait".equals(orien)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }else if ("Landscape".equals(orien)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
+        initial_edit_text = (TextView)view.findViewById(R.id.initial_message);
+        container_relativeLayout = (RelativeLayout)view.findViewById(R.id.container);
 //        TextView initial_edit_text = view.findViewById(R.id.initial_message);
 //        initial_edit_text.setText("Hello, " + username);
         textView1 = (TextView) view.findViewById(R.id.textView1);

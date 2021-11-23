@@ -2,6 +2,9 @@ package com.yangezhu.forumproject.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.util.Log;
@@ -49,6 +52,20 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
         holder.post_username.setText(posts_list.get(position).getUser_name());
         holder.post_title.setText(posts_list.get(position).getTitle());
         holder.post_date.setText(DateUtilities.timeFormatter(posts_list.get(position).getPublish_date()));
+
+        // set text color
+        String text_color = load_text_color();
+        holder.post_username.setTextColor(Color.parseColor(text_color));
+        holder.post_title.setTextColor(Color.parseColor(text_color));
+        holder.post_date.setTextColor(Color.parseColor(text_color));
+        holder.post_description.setTextColor(Color.parseColor(text_color));
+
+        // set text fize
+        float font_size = load_font_size_settings();
+        holder.post_username.setTextSize(font_size);
+        holder.post_title.setTextSize(font_size);
+        holder.post_date.setTextSize(font_size);
+        holder.post_description.setTextSize(font_size);
 
         String description = posts_list.get(position).getDescription();
 
@@ -111,5 +128,33 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
             image_left = (ImageView) itemView.findViewById(R.id.post_image);
             image_right = (ImageView) itemView.findViewById(R.id.post_image2);
         }
+    }
+
+    private String load_text_color(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        boolean chk_night = sp.getBoolean("NIGHT", false);
+        String text_color = "";
+        if (chk_night){
+            text_color = "#b5b5b5";
+        }else{
+            text_color = "#333333";
+        }
+        return text_color;
+    }
+
+    private float load_font_size_settings(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String font_size = sp.getString("FONT_SIZE", "false");
+        float settings_font_size = 10;
+        if ("Small".equals(font_size)){
+            settings_font_size=12;
+        }else if ("Medium".equals(font_size)){
+            settings_font_size=16;
+        }else if ("Large".equals(font_size)){
+            settings_font_size=20;
+        }
+
+        return settings_font_size;
     }
 }

@@ -9,11 +9,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +48,7 @@ public class MyPostsActivity extends AppCompatActivity {
 
     private final String TAG = "FORUM_FRAGMENT_YZHU";
     private String userId;
+    private RelativeLayout container_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +61,7 @@ public class MyPostsActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("My Posts");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        container_layout = (RelativeLayout) findViewById(R.id.container);
 
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
@@ -85,7 +92,30 @@ public class MyPostsActivity extends AppCompatActivity {
         posts_list.clear();
         postListAdapter.notifyDataSetChanged();
         InitiateMyPostsList();
+        load_settings();
         super.onResume();
+    }
+
+    private void load_settings(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean chk_night = sp.getBoolean("NIGHT", false);
+        if (chk_night){
+            container_layout.setBackgroundColor(Color.parseColor("#222222"));
+
+        }else{
+            container_layout.setBackgroundColor(Color.parseColor("#ffffff"));
+
+        }
+
+        String orien = sp.getString("ORIENTATION", "false");
+        if ("Auto".equals(orien)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_BEHIND);
+        }else if ("Portrait".equals(orien)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }else if ("Landscape".equals(orien)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
     }
 
     private void InitiateMyPostsList() {

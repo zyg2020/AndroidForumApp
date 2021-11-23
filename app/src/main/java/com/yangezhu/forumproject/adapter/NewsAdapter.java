@@ -1,6 +1,10 @@
 package com.yangezhu.forumproject.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -53,6 +57,17 @@ public class NewsAdapter extends ArrayAdapter {
         image = convertView.findViewById(R.id.post_image);
         TextView news_description = convertView.findViewById(R.id.post_description);
 
+        // set text color
+        String text_color = load_text_color();
+        title.setTextColor(Color.parseColor(text_color));
+        date.setTextColor(Color.parseColor(text_color));
+        news_description.setTextColor(Color.parseColor(text_color));
+
+        // set text fize
+        float font_size = load_font_size_settings();
+        date.setTextSize(font_size);
+        news_description.setTextSize(font_size);
+
         String image_url = news.getImage_url();
         if (TextUtils.isEmpty(image_url)){
             image.setVisibility(View.GONE);
@@ -85,5 +100,33 @@ public class NewsAdapter extends ArrayAdapter {
 //        Log.d("ZHU_JSON_MSG", news.toString());
 
         return convertView;
+    }
+
+    private String load_text_color(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        boolean chk_night = sp.getBoolean("NIGHT", false);
+        String text_color = "";
+        if (chk_night){
+            text_color = "#b5b5b5";
+        }else{
+            text_color = "#333333";
+        }
+        return text_color;
+    }
+
+    private float load_font_size_settings(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        String font_size = sp.getString("FONT_SIZE", "false");
+        float settings_font_size = 10;
+        if ("Small".equals(font_size)){
+            settings_font_size=12;
+        }else if ("Medium".equals(font_size)){
+            settings_font_size=16;
+        }else if ("Large".equals(font_size)){
+            settings_font_size=20;
+        }
+
+        return settings_font_size;
     }
 }

@@ -5,6 +5,9 @@ import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -28,6 +32,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +42,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -73,8 +80,15 @@ public class AddPostFragment extends Fragment {
 
     private TextView txt_display_upload_images;
 
+    private TextView titleTextView;
+    private TextView descriptionTextView;
+    private TextView categoryTextView;
+    private TextView uploadImagesTextView;
+
+
     private RecyclerView recycle_view_selected_images;
     private SelectedImagesAdapter selectedImagesAdapter;
+    private LinearLayout container_relativeLayout;
 
     ArrayList<Uri> uploaded_images_uri_list = new ArrayList<Uri>();
     Map<Uri, String> selected_images_key_uploaded_url_value = new HashMap<>();
@@ -90,9 +104,13 @@ public class AddPostFragment extends Fragment {
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
     private ProgressDialog progressDialog;
+
+    private BottomNavigationView bottomNavigationView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        bottomNavigationView = (BottomNavigationView)getActivity().findViewById(R.id.bottom_navigation);
     }
 
     @Override
@@ -238,7 +256,60 @@ public class AddPostFragment extends Fragment {
 
         recycle_view_selected_images.setAdapter(selectedImagesAdapter);
 
+        container_relativeLayout = (LinearLayout)view.findViewById(R.id.container);
+
+        titleTextView = (TextView) view.findViewById(R.id.titleTextView);
+        descriptionTextView= (TextView) view.findViewById(R.id.descriptionTextView);
+        categoryTextView= (TextView) view.findViewById(R.id.categoryTextView);
+        uploadImagesTextView= (TextView) view.findViewById(R.id.uploadImagesTextView);
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        load_settings();
+        super.onResume();
+    }
+
+    private void load_settings(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        boolean chk_night = sp.getBoolean("NIGHT", false);
+        if (chk_night){
+            container_relativeLayout.setBackgroundColor(Color.parseColor("#222222"));
+            bottomNavigationView.setBackgroundColor(Color.parseColor("#222222"));
+
+            edt_title.setTextColor(Color.parseColor("#b5b5b5"));
+            edt_description.setTextColor(Color.parseColor("#b5b5b5"));
+            btn_upload_images.setTextColor(Color.parseColor("#b5b5b5"));
+            btn_post.setTextColor(Color.parseColor("#b5b5b5"));
+            titleTextView.setTextColor(Color.parseColor("#b5b5b5"));
+            descriptionTextView.setTextColor(Color.parseColor("#b5b5b5"));
+            categoryTextView.setTextColor(Color.parseColor("#b5b5b5"));
+            uploadImagesTextView.setTextColor(Color.parseColor("#b5b5b5"));
+        }else{
+            container_relativeLayout.setBackgroundColor(Color.parseColor("#ffffff"));
+            bottomNavigationView.setBackgroundColor(Color.parseColor("#ffffff"));
+
+            edt_title.setTextColor(Color.parseColor("#333333"));
+            edt_description.setTextColor(Color.parseColor("#333333"));
+            btn_upload_images.setTextColor(Color.parseColor("#ffffff"));
+            btn_post.setTextColor(Color.parseColor("#ffffff"));
+            titleTextView.setTextColor(Color.parseColor("#333333"));
+            descriptionTextView.setTextColor(Color.parseColor("#333333"));
+            categoryTextView.setTextColor(Color.parseColor("#333333"));
+            uploadImagesTextView.setTextColor(Color.parseColor("#333333"));
+        }
+
+        String orien = sp.getString("ORIENTATION", "false");
+        if ("Auto".equals(orien)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_BEHIND);
+        }else if ("Portrait".equals(orien)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }else if ("Landscape".equals(orien)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
     }
 
     private void uploadPost(String title, String description, Date current_time, String user_id, String username, String selected_category, List<String> uploaded_images_url) {
@@ -273,6 +344,7 @@ public class AddPostFragment extends Fragment {
                                 if (task.isSuccessful()){
                                     progressDialog.dismiss();
                                     clearForm();
+                                    getActivity().onBackPressed();
                                 }
                             }
                         });
