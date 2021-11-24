@@ -83,6 +83,7 @@ public class InitialLoginActivity extends AppCompatActivity {
 
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        signInIntent.putExtra("LOGIN_METHOD", "GOOGLE");
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 

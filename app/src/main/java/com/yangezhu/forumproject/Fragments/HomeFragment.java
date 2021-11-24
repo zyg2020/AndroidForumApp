@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +85,11 @@ public class HomeFragment extends Fragment {
                     HomeFragment myFragment = (HomeFragment)getActivity().getSupportFragmentManager().findFragmentByTag("HomeFragment");
                     if (myFragment != null && myFragment.isVisible()) {
                         initial_edit_text = (TextView)getView().findViewById(R.id.initial_message);
-                        initial_edit_text.setText("Hello, " + username);
+
+                        if (!TextUtils.isEmpty(username)){
+                            initial_edit_text.setText("Hello, " + username);
+                        }
+
                         load_settings();
                         SharedPreferencesManager.getInstance(getContext()).setUsername(username);
                         SharedPreferencesManager.getInstance(getContext()).setUserId(user_id);
@@ -156,6 +161,10 @@ public class HomeFragment extends Fragment {
         });
         GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(getContext());
         if(signInAccount != null){
+
+                initial_edit_text.setText("Hello, " + signInAccount.getDisplayName());
+
+
             textView1.setText("getDisplayName" + signInAccount.getDisplayName());
             textView2.setText("getEmail"+signInAccount.getEmail());
             textView3.setText("getId" + signInAccount.getId() + "\ngetFamilyName: " + signInAccount.getFamilyName() + "\nUID: " + auth.getCurrentUser().getUid());
