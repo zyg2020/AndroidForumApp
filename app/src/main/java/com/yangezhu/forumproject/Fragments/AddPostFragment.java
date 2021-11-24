@@ -278,6 +278,7 @@ public class AddPostFragment extends Fragment {
 
     @Override
     public void onResume() {
+        ((MainActivity)getActivity()).setActionBarTitle("Add a Post");
         load_settings();
         super.onResume();
     }

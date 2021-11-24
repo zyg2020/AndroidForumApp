@@ -140,6 +140,7 @@ public class ForumFragment extends Fragment {
 
     @Override
     public void onResume() {
+        ((MainActivity)getActivity()).setActionBarTitle("View Posts");
         load_settings();
         if (postListAdapter!=null){
             postListAdapter.notifyDataSetChanged();

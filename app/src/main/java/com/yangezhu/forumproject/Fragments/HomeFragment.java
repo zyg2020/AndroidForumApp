@@ -27,6 +27,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.yangezhu.forumproject.InitialLoginActivity;
+import com.yangezhu.forumproject.MainActivity;
 import com.yangezhu.forumproject.MyPostsActivity;
 import com.yangezhu.forumproject.R;
 import com.yangezhu.forumproject.RegisterActivity;
@@ -67,7 +68,6 @@ public class HomeFragment extends Fragment {
             getActivity().setTheme(R.style.ForumProjectDay);
         }
 
-
         super.onCreate(savedInstanceState);
         bottomNavigationView = (BottomNavigationView)getActivity().findViewById(R.id.bottom_navigation);
         auth = FirebaseAuth.getInstance();
@@ -96,6 +96,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onResume() {
+        ((MainActivity)getActivity()).setActionBarTitle("Forum");
         load_settings();
         super.onResume();
     }

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.HomeFragment"
-    android:id="@+id/container">
+    android:id="@+id/container"
+    android:padding="20dp">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
@@ -41,9 +42,10 @@
         android:id="@+id/btn_to_view_my_posts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My Posts"
         android:layout_below="@+id/textView3"
-        android:layout_margin="20dp"
-        />
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="My Posts" />
 
 </RelativeLayout>

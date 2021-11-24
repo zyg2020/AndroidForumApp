@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.preference.PreferenceManager;
@@ -20,6 +21,7 @@ import android.widget.RelativeLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
+import com.yangezhu.forumproject.MainActivity;
 import com.yangezhu.forumproject.R;
 import com.yangezhu.forumproject.RSSParseHandler;
 import com.yangezhu.forumproject.WebViewNewsDetailsActivity;
@@ -45,10 +47,10 @@ public class NewsFragment extends Fragment {
     private DownloadAndParseRSS downloadAndParseRSS;
     private RelativeLayout container_relativeLayout;
     private BottomNavigationView bottomNavigationView;
-
+    private SharedPreferences sp;
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sp = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         boolean chk_night = sp.getBoolean("NIGHT", false);
         if (chk_night){
@@ -68,6 +70,10 @@ public class NewsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_news, container, false);
         container_relativeLayout = (RelativeLayout)view.findViewById(R.id.container);
+        String news_location = sp.getString("NEWS_FROM_LOCATION", "Winnipeg");
+
+        ((MainActivity)getActivity()).setActionBarTitle(news_location + " News");
+
 
         return view;
     }
@@ -75,7 +81,77 @@ public class NewsFragment extends Fragment {
     @Override
     public void onResume() {
         load_settings();
-        downloadAndParseRSS = (DownloadAndParseRSS) new DownloadAndParseRSS().execute("https://globalnews.ca/winnipeg/feed/");
+
+        String news_location = sp.getString("NEWS_FROM_LOCATION", "Winnipeg");
+
+        ((MainActivity)getActivity()).setActionBarTitle(news_location + " News");
+
+        String url = "";
+        switch (news_location) {
+            case "BC":
+                url = "https://globalnews.ca/bc/feed/";
+                break;
+            case "Calgary":
+                url = "https://globalnews.ca/calgary/feed/";
+                break;
+            case "Edmonton":
+                url = "https://globalnews.ca/edmonton/feed/";
+                break;
+            case "Lethbridge":
+                url = "https://globalnews.ca/lethbridge/feed/";
+                break;
+            case "Regina":
+                url = "https://globalnews.ca/regina/feed/";
+                break;
+            case "Saskatoon":
+                url = "https://globalnews.ca/saskatoon/feed/";
+                break;
+            case "Winnipeg":
+                url = "https://globalnews.ca/winnipeg/feed/";
+                break;
+            case "Toronto":
+                url = "https://globalnews.ca/toronto/feed/";
+                break;
+            case "Montreal":
+                url = "https://globalnews.ca/montreal/feed/";
+                break;
+            case "Halifax":
+                url = "https://globalnews.ca/halifax/feed/";
+                break;
+            case "New Brunswick":
+                url = "https://globalnews.ca/new-brunswick/feed/";
+                break;
+            case "Okanagan":
+                url = "https://globalnews.ca/okanagan/feed/";
+                break;
+            case "London":
+                url = "https://globalnews.ca/london/feed/";
+                break;
+            case "Hamilton":
+                url = "https://globalnews.ca/hamilton/feed/";
+                break;
+            case "Guelph":
+                url = "https://globalnews.ca/guelph/feed/";
+                break;
+            case "Peterborough":
+                url = "https://globalnews.ca/peterborough/feed/";
+                break;
+            case "Kingston":
+                url = "https://globalnews.ca/kingston/feed/";
+                break;
+            case "Barrie":
+                url = "https://globalnews.ca/barrie/feed/";
+                break;
+            case "Ottawa":
+                url = "https://globalnews.ca/ottawa/feed/";
+                break;
+            default:
+                url = "https://globalnews.ca/winnipeg/feed/";
+                break;
+        }
+
+
+        downloadAndParseRSS = (DownloadAndParseRSS) new DownloadAndParseRSS().execute(url);
         super.onResume();
     }
 

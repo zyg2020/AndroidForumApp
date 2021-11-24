@@ -111,6 +111,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void setActionBarTitle(String title) {
+        getSupportActionBar().setTitle(title);
+    }
+
     private void load_settings(){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 

@@ -73,7 +73,7 @@ public class NewsAdapter extends ArrayAdapter {
             image.setVisibility(View.GONE);
         }else{
             image.setVisibility(View.VISIBLE);
-            Picasso.get().load(news.getImage_url()).into(image);
+            Picasso.get().load(news.getImage_url()).resize(100,100).into(image);
         }
 
         title.setText(news.getTitle());
