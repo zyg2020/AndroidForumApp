@@ -1,34 +1,47 @@
 package com.yangezhu.forumproject.Fragments;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 import com.yangezhu.forumproject.InitialLoginActivity;
 import com.yangezhu.forumproject.MainActivity;
 import com.yangezhu.forumproject.MyPostsActivity;
@@ -49,15 +62,21 @@ public class HomeFragment extends Fragment {
     private FirebaseFirestore firestore;
 
     private String username;
+    private String avatar_url;
+
     private TextView initial_edit_text;
     private TextView textView1;
     private TextView textView2;
     private TextView textView3;
     private Button btn_to_view_my_posts;
+    private Button btn_update_avatar;
     private RelativeLayout container_relativeLayout;
     private BottomNavigationView bottomNavigationView;
 
     private ImageView image_view_avatar;
+
+    private Uri imageUri;
+    private String uploaded_avatar_url;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -87,7 +106,7 @@ public class HomeFragment extends Fragment {
                 if (task.isSuccessful()){
                     DocumentSnapshot document = task.getResult();
                     username = document.getString ("username");
-                    String avatar_url = document.getString("avatar");
+                    avatar_url = document.getString("avatar");
 
                     HomeFragment myFragment = (HomeFragment)getActivity().getSupportFragmentManager().findFragmentByTag("HomeFragment");
                     if (myFragment != null && myFragment.isVisible()) {
@@ -110,6 +129,63 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    private String getFileExtension(Uri url) {
+        ContentResolver contentResolver = getContext().getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(url));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == getActivity().RESULT_OK) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            imageUri = result.getUri();
+
+            // image_view_avatar.setImageURI(imageUri);
+            Picasso.get().load(imageUri).transform(new CropCircleTransformation() ).into(image_view_avatar);
+
+            StorageReference fileRef = FirebaseStorage.getInstance().getReference().child("uploads").child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
+            fileRef.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            uploaded_avatar_url = uri.toString();
+                            firestore.collection("users").document(auth.getCurrentUser().getUid()).update("avatar", uploaded_avatar_url);
+                            Toast.makeText(getContext(), "Update new Image successfully", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            });
+
+            if (avatar_url != null){
+                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(avatar_url);
+                storageReference.delete().addOnSuccessListener(unused -> {
+                    Toast.makeText(getContext(), "Delete Old Image successfully", Toast.LENGTH_LONG).show();
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.d("IMAGE_DELTE", e.getMessage());
+                });
+            }
+
+        }else {
+            Toast.makeText(getContext(), "Try again!", Toast.LENGTH_SHORT).show();
+
+            // Reload current fragment
+//            Fragment frg = null;
+//            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//
+//            frg = fragmentManager.findFragmentByTag("HomeFragment");
+//            final FragmentTransaction ft = fragmentManager.beginTransaction();
+//            ft.detach(frg);
+//            ft.attach(frg);
+//            ft.commit();
+        }
+    }
+
     @Override
     public void onResume() {
         ((MainActivity)getActivity()).setActionBarTitle("Forum");
@@ -129,6 +205,7 @@ public class HomeFragment extends Fragment {
             textView2.setTextColor(Color.parseColor("#b5b5b5"));
             textView3.setTextColor(Color.parseColor("#b5b5b5"));
             btn_to_view_my_posts.setTextColor(Color.parseColor("#222222"));
+            btn_update_avatar.setTextColor(Color.parseColor("#222222"));
             initial_edit_text.setTextColor(Color.parseColor("#b5b5b5"));
         }else{
             container_relativeLayout.setBackgroundColor(Color.parseColor("#ffffff"));
@@ -138,6 +215,7 @@ public class HomeFragment extends Fragment {
             textView2.setTextColor(Color.parseColor("#333333"));
             textView3.setTextColor(Color.parseColor("#333333"));
             btn_to_view_my_posts.setTextColor(Color.parseColor("#ffffff"));
+            btn_update_avatar.setTextColor(Color.parseColor("#ffffff"));
             initial_edit_text.setTextColor(Color.parseColor("#333333"));
         }
 
@@ -164,6 +242,10 @@ public class HomeFragment extends Fragment {
         textView2 = (TextView) view.findViewById(R.id.textView2);
         textView3 = (TextView) view.findViewById(R.id.textView3);
         image_view_avatar = (ImageView) view.findViewById(R.id.image_view_avatar);
+
+        btn_update_avatar = (Button) view.findViewById(R.id.btn_update_avatar);
+        btn_update_avatar.setOnClickListener(view12 -> CropImage.activity().start(getContext(), this));
+
         btn_to_view_my_posts = (Button) view.findViewById(R.id.btn_to_view_my_posts);
         btn_to_view_my_posts.setOnClickListener(view1 -> {
             // sdf
@@ -173,8 +255,7 @@ public class HomeFragment extends Fragment {
         GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(getContext());
         if(signInAccount != null){
 
-                initial_edit_text.setText("Hello, " + signInAccount.getDisplayName());
-
+            initial_edit_text.setText("Hello, " + signInAccount.getDisplayName());
 
             textView1.setText("Name:  " + signInAccount.getDisplayName());
             textView2.setText("Email: "+signInAccount.getEmail());
