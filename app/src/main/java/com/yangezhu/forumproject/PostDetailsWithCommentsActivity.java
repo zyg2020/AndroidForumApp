@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -76,6 +78,7 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
     private Button delete;
     private Button update;
     private ImageView author_avatar;
+    private RelativeLayout reply_section_container;
 
     private RelativeLayout container_layout;
 
@@ -103,6 +106,7 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
         post_description = (TextView) findViewById(R.id.post_description);
         edt_input_comment_box = (EditText)findViewById(R.id.edt_input_comment_box);
         author_avatar= (ImageView) findViewById(R.id.author_avatar);
+        reply_section_container = (RelativeLayout)findViewById(R.id.reply_section_container);
 
         Gson gson = new Gson();
         selected_post = gson.fromJson(getIntent().getStringExtra(PostListAdapter.SELECTED_POST), Post.class);
@@ -221,10 +225,19 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
             post_username.setTextColor(Color.parseColor("#b5b5b5"));
             post_publish_time.setTextColor(Color.parseColor("#b5b5b5"));
             post_description.setTextColor(Color.parseColor("#b5b5b5"));
-            btn_reply.setTextColor(Color.parseColor("#b5b5b5"));
+
             delete.setTextColor(Color.parseColor("#b5b5b5"));
             update.setTextColor(Color.parseColor("#b5b5b5"));
+
+
+            btn_reply.setTextColor(Color.parseColor("#222222"));
+            reply_section_container.setBackgroundColor(Color.parseColor("#1b1b1b"));
+
             edt_input_comment_box.setTextColor(Color.parseColor("#b5b5b5"));
+            edt_input_comment_box.setHintTextColor(Color.parseColor("#424242"));
+
+            ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor("#424242"));
+            ViewCompat.setBackgroundTintList(edt_input_comment_box, colorStateList);
         }else{
             container_layout.setBackgroundColor(Color.parseColor("#ffffff"));
 

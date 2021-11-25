@@ -167,6 +167,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#d9d9d9"
+        android:id="@+id/reply_section_container"
         android:padding="0dp">
 
         <EditText

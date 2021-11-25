@@ -1,6 +1,10 @@
 package com.yangezhu.forumproject.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -10,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,11 +38,17 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     private Context mContext;
     private FirebaseFirestore firestore;
     private Picasso picasso;
+    private boolean chk_night;
+
     public CommentListAdapter(List<Comment> comments_list, Context context){
         this.comments_list = comments_list;
         this.mContext = context;
         this.firestore = FirebaseFirestore.getInstance();
         this.picasso = Picasso.get();
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        chk_night = sp.getBoolean("NIGHT", false);
     }
 
     @NonNull
@@ -59,6 +71,12 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             }
         });
 
+        if (chk_night){
+            holder.cardView.setBackgroundColor(Color.parseColor("#cfcfcf"));
+        }else{
+            holder.cardView.setBackgroundColor(Color.parseColor("#ffffff"));
+        }
+
         Comment current_comment = comments_list.get(position);
         String username = current_comment.getUser_name();
         if (TextUtils.isEmpty(username)){
@@ -80,6 +98,8 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
         public View itemView;
 
+        public CardView cardView;
+
         public TextView comment_username;
         public TextView comment_content;
         public TextView comment_date;
@@ -90,6 +110,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
             this.itemView = itemView;
 
+            cardView = (CardView)itemView.findViewById(R.id.card_view) ;
             comment_username = (TextView) itemView.findViewById(R.id.comment_username);
             comment_content = (TextView) itemView.findViewById(R.id.comment_content);
             comment_date = (TextView) itemView.findViewById(R.id.comment_date);
