@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -41,6 +43,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 import com.yangezhu.forumproject.adapter.CommentListAdapter;
 import com.yangezhu.forumproject.adapter.PostImageAdapter;
 import com.yangezhu.forumproject.adapter.PostListAdapter;
@@ -56,6 +59,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+
 public class PostDetailsWithCommentsActivity extends AppCompatActivity {
 
     private TextView post_title;
@@ -70,10 +75,13 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
 
     private Button delete;
     private Button update;
+    private ImageView author_avatar;
 
     private RelativeLayout container_layout;
 
     private FirebaseFirestore firestore;
+    private FirebaseAuth auth;
+
     private PostImageAdapter postImageAdapter;
     private CommentListAdapter commentListAdapter;
 
@@ -94,12 +102,13 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
         post_publish_time = (TextView) findViewById(R.id.post_publish_time);
         post_description = (TextView) findViewById(R.id.post_description);
         edt_input_comment_box = (EditText)findViewById(R.id.edt_input_comment_box);
+        author_avatar= (ImageView) findViewById(R.id.author_avatar);
 
         Gson gson = new Gson();
         selected_post = gson.fromJson(getIntent().getStringExtra(PostListAdapter.SELECTED_POST), Post.class);
 
         post_username.setText(selected_post.getUser_name());
-        post_publish_time.setText(DateUtilities.timeFormatterWithYear(selected_post.getPublish_date()));
+        post_publish_time.setText(DateUtilities.timeFormatterWithFullMonthFirst(selected_post.getPublish_date()));
 
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
@@ -109,6 +118,19 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
         }
 
         firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        // auth.getCurrentUser().getUid()
+
+        firestore.collection("users").document(auth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    String avatar_url = document.getString ("avatar");
+                    Picasso.get().load(avatar_url).resize(50,50).placeholder(R.drawable.default_avatar).transform(new CropCircleTransformation() ).into(author_avatar);
+                }
+            }
+        });
 
         btn_reply = (Button) findViewById(R.id.btn_reply);
         btn_reply.setOnClickListener(view -> {
@@ -324,9 +346,9 @@ public class PostDetailsWithCommentsActivity extends AppCompatActivity {
         recycle_view_post_images.setLayoutManager(linearLayoutManager);
 
         // Add devide bar
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recycle_view_post_images.getContext(),
-                linearLayoutManager.getOrientation());
-        recycle_view_post_images.addItemDecoration(dividerItemDecoration);
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recycle_view_post_images.getContext(),
+//                linearLayoutManager.getOrientation());
+//        recycle_view_post_images.addItemDecoration(dividerItemDecoration);
 
          recycle_view_post_images.setAdapter(postImageAdapter);
 
