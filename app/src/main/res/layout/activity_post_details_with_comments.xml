@@ -31,25 +31,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/post_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
                     android:layout_margin="15dp"
+                    android:fontFamily="sans-serif-medium"
                     android:text="title"
                     android:textColor="#000000"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
-                    android:background="#DDDDDD"/>
+                    android:background="#DDDDDD" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/post_username"
@@ -72,8 +74,7 @@
                         android:minHeight="25dip"
                         android:padding="5dp"
                         android:text="Delete"
-                        android:visibility="gone"
-                        />
+                        android:visibility="gone" />
 
                     <Button
                         android:id="@+id/update"
@@ -81,12 +82,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="5dp"
-                        android:padding="5dp"
                         android:minWidth="50dip"
                         android:minHeight="25dip"
+                        android:padding="5dp"
                         android:text="Update"
-                        android:visibility="gone"
-                        />
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -116,19 +116,21 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="15dp"
                     android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp"
                     android:overScrollMode="never" />
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/darker_gray" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycle_view_post_comments"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
+                android:layout_marginBottom="60dp"
                 android:overScrollMode="never" />
 
 
@@ -142,8 +144,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:padding="0dp"
-        android:background="#d9d9d9">
+        android:background="#d9d9d9"
+        android:padding="0dp">
 
         <EditText
             android:id="@+id/edt_input_comment_box"

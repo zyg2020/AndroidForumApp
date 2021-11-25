@@ -54,4 +54,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation "androidx.fragment:fragment:$fragment_version"
+
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    implementation 'jp.wasabeef:picasso-transformations:2.2.1'
 }

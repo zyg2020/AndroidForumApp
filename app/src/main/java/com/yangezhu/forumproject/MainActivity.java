@@ -88,16 +88,16 @@ public class MainActivity extends AppCompatActivity {
                         tag = "NewsFragment";
                     }
                     break;
-                case R.id.bottom_nav_add_post:
-                    //Toast.makeText(MainActivity.this, "Add Post", Toast.LENGTH_SHORT).show();
-
-                    if (selectedFragment != null && selectedFragment instanceof AddPostFragment){
-                        render = false;
-                    }else{
-                        selectedFragment = new AddPostFragment();
-                        tag = "AddPostFragment";
-                    }
-                    break;
+//                case R.id.bottom_nav_add_post:
+//                    //Toast.makeText(MainActivity.this, "Add Post", Toast.LENGTH_SHORT).show();
+//
+//                    if (selectedFragment != null && selectedFragment instanceof AddPostFragment){
+//                        render = false;
+//                    }else{
+//                        selectedFragment = new AddPostFragment();
+//                        tag = "AddPostFragment";
+//                    }
+//                    break;
             }
 
             if (selectedFragment != null && render){

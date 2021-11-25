@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 import com.yangezhu.forumproject.InitialLoginActivity;
 import com.yangezhu.forumproject.MainActivity;
 import com.yangezhu.forumproject.MyPostsActivity;
@@ -35,6 +37,8 @@ import com.yangezhu.forumproject.RegisterActivity;
 import com.yangezhu.forumproject.utilities.SharedPreferencesManager;
 
 import java.util.HashMap;
+
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,6 +56,8 @@ public class HomeFragment extends Fragment {
     private Button btn_to_view_my_posts;
     private RelativeLayout container_relativeLayout;
     private BottomNavigationView bottomNavigationView;
+
+    private ImageView image_view_avatar;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -81,6 +87,7 @@ public class HomeFragment extends Fragment {
                 if (task.isSuccessful()){
                     DocumentSnapshot document = task.getResult();
                     username = document.getString ("username");
+                    String avatar_url = document.getString("avatar");
 
                     HomeFragment myFragment = (HomeFragment)getActivity().getSupportFragmentManager().findFragmentByTag("HomeFragment");
                     if (myFragment != null && myFragment.isVisible()) {
@@ -89,6 +96,10 @@ public class HomeFragment extends Fragment {
                         if (!TextUtils.isEmpty(username)){
                             initial_edit_text.setText("Hello, " + username);
                         }
+
+
+                        Picasso.get().load(avatar_url).placeholder(R.drawable.default_avatar).transform(new CropCircleTransformation() ).resize(200,200).into(image_view_avatar);
+
 
                         load_settings();
                         SharedPreferencesManager.getInstance(getContext()).setUsername(username);
@@ -152,7 +163,7 @@ public class HomeFragment extends Fragment {
         textView1 = (TextView) view.findViewById(R.id.textView1);
         textView2 = (TextView) view.findViewById(R.id.textView2);
         textView3 = (TextView) view.findViewById(R.id.textView3);
-
+        image_view_avatar = (ImageView) view.findViewById(R.id.image_view_avatar);
         btn_to_view_my_posts = (Button) view.findViewById(R.id.btn_to_view_my_posts);
         btn_to_view_my_posts.setOnClickListener(view1 -> {
             // sdf
@@ -165,9 +176,9 @@ public class HomeFragment extends Fragment {
                 initial_edit_text.setText("Hello, " + signInAccount.getDisplayName());
 
 
-            textView1.setText("getDisplayName" + signInAccount.getDisplayName());
-            textView2.setText("getEmail"+signInAccount.getEmail());
-            textView3.setText("getId" + signInAccount.getId() + "\ngetFamilyName: " + signInAccount.getFamilyName() + "\nUID: " + auth.getCurrentUser().getUid());
+            textView1.setText("Name:  " + signInAccount.getDisplayName());
+            textView2.setText("Email: "+signInAccount.getEmail());
+            // textView3.setText("getId" + signInAccount.getId() + "\ngetFamilyName: " + signInAccount.getFamilyName() + "\nUID: " + auth.getCurrentUser().getUid());
             String user_id = auth.getCurrentUser().getUid();
             DocumentReference userRef = firestore.collection("users").document(user_id);
             userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
