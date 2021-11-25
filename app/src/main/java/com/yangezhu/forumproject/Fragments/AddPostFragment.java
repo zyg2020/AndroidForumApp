@@ -307,7 +307,7 @@ public class AddPostFragment extends Fragment {
             ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor("#b5b5b5"));
             ViewCompat.setBackgroundTintList(edt_title, colorStateList);
             ViewCompat.setBackgroundTintList(edt_description, colorStateList);
-
+            
         }else{
             container_relativeLayout.setBackgroundColor(Color.parseColor("#ffffff"));
             bottomNavigationView.setBackgroundColor(Color.parseColor("#ffffff"));
@@ -428,19 +428,22 @@ public class AddPostFragment extends Fragment {
                 } else {
                     if (data.getClipData() != null) {
                         ClipData mClipData = data.getClipData();
-                        ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
+                        // ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
 
                         int count = mClipData.getItemCount();
                         for (int i = 0; i < count; i++) {
 
                             ClipData.Item item = mClipData.getItemAt(i);
                             Uri uri = item.getUri();
-                            mArrayUri.add(uri);
+                            uploaded_images_uri_list.add(uri);
+                            selected_images_key_uploaded_url_value.put(uri, "");
 
                             String imagePath = item.toString();
                             Log.d("YZHU_IMAGE_SELECT", "Multiple images --> " + imagePath);
                         }
-                        Log.v("LOG_TAG", "Selected Images" + mArrayUri.size());
+                        Log.v("YZHU_IMAGE_SELECT", "Selected Images" + count);
+
+                        selectedImagesAdapter.notifyDataSetChanged();
                     }
                 }
             } else {
