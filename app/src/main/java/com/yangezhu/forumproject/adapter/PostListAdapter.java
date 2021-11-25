@@ -18,6 +18,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -28,16 +33,21 @@ import com.yangezhu.forumproject.utilities.DateUtilities;
 
 import java.util.List;
 
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+
 public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHolder> {
 
     public List<Post> posts_list;
     private Context mContext;
+    private Picasso picasso;
 
     public static String SELECTED_POST = "SELECTED_POST";
-
+    FirebaseFirestore firestore;
     public PostListAdapter(List<Post> posts_list, Context context){
         this.posts_list = posts_list;
         this.mContext = context;
+        firestore = FirebaseFirestore.getInstance();
+        picasso = Picasso.get();
     }
 
     @NonNull
@@ -49,9 +59,21 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull PostListAdapter.ViewHolder holder, int position) {
+
+        firestore.collection("users").document(posts_list.get(position).getUser_id()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    String avatar_url = document.getString ("avatar");
+                    picasso.load(avatar_url).resize(50,50).placeholder(R.drawable.default_avatar).transform(new CropCircleTransformation() ).into(holder.author_avatar);
+                }
+            }
+        });
+
         holder.post_username.setText(posts_list.get(position).getUser_name());
         holder.post_title.setText(posts_list.get(position).getTitle());
-        holder.post_date.setText(DateUtilities.timeFormatter(posts_list.get(position).getPublish_date()));
+        holder.post_date.setText(DateUtilities.timeFormatterWithFullMonthFirst(posts_list.get(position).getPublish_date()));
 
         // set text color
         String text_color = load_text_color();
@@ -115,6 +137,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
         public TextView post_date;
         public ImageView image_left;
         public ImageView image_right;
+        public ImageView author_avatar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -127,6 +150,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
 
             image_left = (ImageView) itemView.findViewById(R.id.post_image);
             image_right = (ImageView) itemView.findViewById(R.id.post_image2);
+
+            author_avatar= (ImageView) itemView.findViewById(R.id.author_avatar);
         }
     }
 
