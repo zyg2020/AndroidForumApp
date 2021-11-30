@@ -2,6 +2,7 @@ package com.yangezhu.forumproject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,8 +13,13 @@ import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +69,11 @@ public class UpdatePostActivity extends AppCompatActivity {
 
     private TextView txt_display_upload_images;
 
+    private RelativeLayout container_relativeLayout;
+    private TextView titleTextView;
+    private TextView descriptionTextView;
+    private TextView categoryTextView;
+
     private RecyclerView recycle_view_selected_images;
     private SelectedImagesWhenUpdateAdapter selectedImagesWhenUpdateAdapter;
     private List<String> selected_post_images_urls;
@@ -83,6 +95,17 @@ public class UpdatePostActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean chk_night = sp.getBoolean("NIGHT", false);
+        if (chk_night){
+            setTheme(R.style.ForumProjectNight);
+        }else{
+            setTheme(R.style.ForumProjectDay);
+        }
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_add_post);
 
@@ -197,6 +220,62 @@ public class UpdatePostActivity extends AppCompatActivity {
         //categories_list.indexOf(selected_post.getCategory())
         category_spinner.setSelection(categories_list.indexOf(selected_post.getCategory()));
 
+        container_relativeLayout = (RelativeLayout)findViewById(R.id.container);
+
+        titleTextView = (TextView)findViewById(R.id.titleTextView);
+        descriptionTextView= (TextView) findViewById(R.id.descriptionTextView);
+        categoryTextView= (TextView) findViewById(R.id.categoryTextView);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        load_settings();
+    }
+
+    private void load_settings(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean chk_night = sp.getBoolean("NIGHT", false);
+        if (chk_night){
+            container_relativeLayout.setBackgroundColor(Color.parseColor("#222222"));
+
+            btn_upload_images.setTextColor(Color.parseColor("#222222"));
+            btn_post.setTextColor(Color.parseColor("#222222"));
+
+            titleTextView.setTextColor(Color.parseColor("#b5b5b5"));
+            descriptionTextView.setTextColor(Color.parseColor("#b5b5b5"));
+            categoryTextView.setTextColor(Color.parseColor("#b5b5b5"));
+            // uploadImagesTextView.setTextColor(Color.parseColor("#b5b5b5"));
+
+            edt_title.setTextColor(Color.parseColor("#b5b5b5"));
+            edt_description.setTextColor(Color.parseColor("#b5b5b5"));
+            edt_title.setHintTextColor(Color.parseColor("#b5b5b5"));
+            edt_description.setHintTextColor(Color.parseColor("#b5b5b5"));
+
+            ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor("#b5b5b5"));
+            ViewCompat.setBackgroundTintList(edt_title, colorStateList);
+            ViewCompat.setBackgroundTintList(edt_description, colorStateList);
+
+            // category_spinner
+
+        }else{
+            container_relativeLayout.setBackgroundColor(Color.parseColor("#ffffff"));
+
+            btn_upload_images.setTextColor(Color.parseColor("#ffffff"));
+            btn_post.setTextColor(Color.parseColor("#ffffff"));
+
+            edt_title.setTextColor(Color.parseColor("#333333"));
+            edt_description.setTextColor(Color.parseColor("#333333"));
+            titleTextView.setTextColor(Color.parseColor("#333333"));
+            descriptionTextView.setTextColor(Color.parseColor("#333333"));
+            categoryTextView.setTextColor(Color.parseColor("#333333"));
+            // uploadImagesTextView.setTextColor(Color.parseColor("#333333"));
+
+            ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor("#333333"));
+            ViewCompat.setBackgroundTintList(edt_title, colorStateList);
+            ViewCompat.setBackgroundTintList(edt_description, colorStateList);
+        }
     }
 
     private String getFileExtension(Uri url) {

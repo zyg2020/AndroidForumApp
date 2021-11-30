@@ -85,12 +85,12 @@ public class AddPostFragment extends Fragment {
     private TextView titleTextView;
     private TextView descriptionTextView;
     private TextView categoryTextView;
-    private TextView uploadImagesTextView;
+    // private TextView uploadImagesTextView;
 
 
     private RecyclerView recycle_view_selected_images;
     private SelectedImagesAdapter selectedImagesAdapter;
-    private LinearLayout container_relativeLayout;
+    private RelativeLayout container_relativeLayout;
 
     ArrayList<Uri> uploaded_images_uri_list = new ArrayList<Uri>();
     Map<Uri, String> selected_images_key_uploaded_url_value = new HashMap<>();
@@ -108,6 +108,8 @@ public class AddPostFragment extends Fragment {
     private ProgressDialog progressDialog;
 
     private BottomNavigationView bottomNavigationView;
+
+    private ArrayAdapter<String> categories_adapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -151,7 +153,7 @@ public class AddPostFragment extends Fragment {
         categories_list.add("Rent");
         categories_list.add("Used Cars");
 
-        ArrayAdapter<String> categories_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, categories_list);
+        categories_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, categories_list);
 
         // Drop down layout style - list view with radio button
         categories_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -266,12 +268,12 @@ public class AddPostFragment extends Fragment {
 
         recycle_view_selected_images.setAdapter(selectedImagesAdapter);
 
-        container_relativeLayout = (LinearLayout)view.findViewById(R.id.container);
+        container_relativeLayout = (RelativeLayout)view.findViewById(R.id.container);
 
         titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         descriptionTextView= (TextView) view.findViewById(R.id.descriptionTextView);
         categoryTextView= (TextView) view.findViewById(R.id.categoryTextView);
-        uploadImagesTextView= (TextView) view.findViewById(R.id.uploadImagesTextView);
+        // uploadImagesTextView= (TextView) view.findViewById(R.id.uploadImagesTextView);
 
         return view;
     }
@@ -297,7 +299,7 @@ public class AddPostFragment extends Fragment {
             titleTextView.setTextColor(Color.parseColor("#b5b5b5"));
             descriptionTextView.setTextColor(Color.parseColor("#b5b5b5"));
             categoryTextView.setTextColor(Color.parseColor("#b5b5b5"));
-            uploadImagesTextView.setTextColor(Color.parseColor("#b5b5b5"));
+            // uploadImagesTextView.setTextColor(Color.parseColor("#b5b5b5"));
 
             edt_title.setTextColor(Color.parseColor("#b5b5b5"));
             edt_description.setTextColor(Color.parseColor("#b5b5b5"));
@@ -307,6 +309,8 @@ public class AddPostFragment extends Fragment {
             ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor("#b5b5b5"));
             ViewCompat.setBackgroundTintList(edt_title, colorStateList);
             ViewCompat.setBackgroundTintList(edt_description, colorStateList);
+
+            // category_spinner
 
         }else{
             container_relativeLayout.setBackgroundColor(Color.parseColor("#ffffff"));
@@ -320,7 +324,7 @@ public class AddPostFragment extends Fragment {
             titleTextView.setTextColor(Color.parseColor("#333333"));
             descriptionTextView.setTextColor(Color.parseColor("#333333"));
             categoryTextView.setTextColor(Color.parseColor("#333333"));
-            uploadImagesTextView.setTextColor(Color.parseColor("#333333"));
+            // uploadImagesTextView.setTextColor(Color.parseColor("#333333"));
 
             ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor("#333333"));
             ViewCompat.setBackgroundTintList(edt_title, colorStateList);
