@@ -78,42 +78,42 @@ public class SettingsActivity extends PreferenceActivity {
             }
         });
 
-        ListPreference listPreference = (ListPreference) findPreference("ORIENTATION");
-        String orien = sp.getString("ORIENTATION", "false");
-        if ("Auto".equals(orien)){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_BEHIND);
-
-        }else if ("Portrait".equals(orien)){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }else if ("Landscape".equals(orien)){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
-        listPreference.setSummary(listPreference.getEntry());
-        listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-
-                String items = (String)o;
-                if (preference.getKey().equals("ORIENTATION")){
-                    switch (items){
-                        case "Auto":
-                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_BEHIND);
-                            break;
-                        case "Portrait":
-                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                            break;
-                        case "Landscape":
-                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                            break;
-                    }
-
-                    ListPreference listPrefs = (ListPreference) preference;
-                    listPrefs.setSummary(listPrefs.getEntries()[listPrefs.findIndexOfValue(items)]);
-                }
-
-                return true;
-            }
-        });
+//        ListPreference listPreference = (ListPreference) findPreference("ORIENTATION");
+//        String orien = sp.getString("ORIENTATION", "false");
+//        if ("Auto".equals(orien)){
+//            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_BEHIND);
+//
+//        }else if ("Portrait".equals(orien)){
+//            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        }else if ("Landscape".equals(orien)){
+//            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//        }
+//        listPreference.setSummary(listPreference.getEntry());
+//        listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//            @Override
+//            public boolean onPreferenceChange(Preference preference, Object o) {
+//
+//                String items = (String)o;
+//                if (preference.getKey().equals("ORIENTATION")){
+//                    switch (items){
+//                        case "Auto":
+//                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_BEHIND);
+//                            break;
+//                        case "Portrait":
+//                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//                            break;
+//                        case "Landscape":
+//                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//                            break;
+//                    }
+//
+//                    ListPreference listPrefs = (ListPreference) preference;
+//                    listPrefs.setSummary(listPrefs.getEntries()[listPrefs.findIndexOfValue(items)]);
+//                }
+//
+//                return true;
+//            }
+//        });
 
         list_preference_fontsize = (ListPreference) findPreference("FONT_SIZE");
         String font_size = sp.getString("FONT_SIZE", "false");

@@ -43,11 +43,11 @@
         android:id="@+id/btn_add_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_add"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"/>
+        android:src="@drawable/ic_add" />
 
 </RelativeLayout>
