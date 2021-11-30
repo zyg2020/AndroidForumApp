@@ -307,7 +307,7 @@ public class AddPostFragment extends Fragment {
             ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor("#b5b5b5"));
             ViewCompat.setBackgroundTintList(edt_title, colorStateList);
             ViewCompat.setBackgroundTintList(edt_description, colorStateList);
-            
+
         }else{
             container_relativeLayout.setBackgroundColor(Color.parseColor("#ffffff"));
             bottomNavigationView.setBackgroundColor(Color.parseColor("#ffffff"));
@@ -423,7 +423,7 @@ public class AddPostFragment extends Fragment {
                         display_text += uploaded_images_uri_list.get(i).toString() + "\n";
                         Log.d("YZHU_IMAGE_SELECT", "Multiple images --> " + uploaded_images_uri_list.get(i));
                     }
-                    txt_display_upload_images.setText(display_text);
+                    // txt_display_upload_images.setText(display_text);
 
                 } else {
                     if (data.getClipData() != null) {

@@ -85,7 +85,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
         // set text fize
         float font_size = load_font_size_settings();
         holder.post_username.setTextSize(font_size);
-        holder.post_title.setTextSize(font_size);
+        // holder.post_title.setTextSize(font_size);
         holder.post_date.setTextSize(font_size);
         holder.post_description.setTextSize(font_size);
 

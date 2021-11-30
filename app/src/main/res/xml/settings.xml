@@ -13,17 +13,17 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="Screen orientation">
-        <ListPreference
-            android:title="Orientation"
-            android:key="ORIENTATION"
-            android:entries="@array/items_name"
-            android:entryValues="@array/items_value"
-            android:defaultValue="false"
-            />
+<!--    <PreferenceCategory-->
+<!--        android:title="Screen orientation">-->
+<!--        <ListPreference-->
+<!--            android:title="Orientation"-->
+<!--            android:key="ORIENTATION"-->
+<!--            android:entries="@array/items_name"-->
+<!--            android:entryValues="@array/items_value"-->
+<!--            android:defaultValue="false"-->
+<!--            />-->
 
-    </PreferenceCategory>
+<!--    </PreferenceCategory>-->
 
     <PreferenceCategory
         android:title="Font size">

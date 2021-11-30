@@ -66,7 +66,7 @@ public class MyPostsListAdapter extends RecyclerView.Adapter<MyPostsListAdapter.
 
         // set text fize
         float font_size = load_font_size_settings();
-        holder.post_title.setTextSize(font_size);
+        // holder.post_title.setTextSize(font_size);
         holder.post_date.setTextSize(font_size);
         holder.post_description.setTextSize(font_size);
 
