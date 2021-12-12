@@ -373,7 +373,8 @@ public class AddPostFragment extends Fragment {
                                 if (task.isSuccessful()){
                                     progressDialog.dismiss();
                                     clearForm();
-                                    getActivity().onBackPressed();
+                                    ((MainActivity) getActivity()).ifLoad = true;
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new ForumFragment(), "ForumFragment").commit();
                                 }
                             }
                         });

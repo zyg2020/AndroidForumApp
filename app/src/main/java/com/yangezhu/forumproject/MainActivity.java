@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private Fragment selectedFragment;
     private RelativeLayout main_activity_container;
+    public boolean ifLoad = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

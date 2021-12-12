@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -58,6 +59,7 @@ public class ForumFragment extends Fragment {
     private RelativeLayout container_relativeLayout;
     private BottomNavigationView bottomNavigationView;
     private BottomNavigationView forumTypeNavigationView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -145,6 +147,17 @@ public class ForumFragment extends Fragment {
         if (postListAdapter!=null){
             postListAdapter.notifyDataSetChanged();
         }
+        //loadPosts("Used Items");
+//        if (((MainActivity) getActivity()).ifLoad){
+//            Fragment frg = null;
+//            frg = getActivity().getSupportFragmentManager().findFragmentByTag("ForumFragment");
+//            final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+//            ft.detach(frg);
+//            ft.attach(frg);
+//            ((MainActivity) getActivity()).ifLoad = false;
+//            ft.commit();
+//        }
+
         super.onResume();
     }
 

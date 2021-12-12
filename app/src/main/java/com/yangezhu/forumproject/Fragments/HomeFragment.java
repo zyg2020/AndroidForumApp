@@ -106,19 +106,36 @@ public class HomeFragment extends Fragment {
                 if (task.isSuccessful()){
                     DocumentSnapshot document = task.getResult();
                     username = document.getString ("username");
+
+                    String name = document.getString ("name");
+
+                    String email = document.getString ("email");
+
                     avatar_url = document.getString("avatar");
 
                     HomeFragment myFragment = (HomeFragment)getActivity().getSupportFragmentManager().findFragmentByTag("HomeFragment");
                     if (myFragment != null && myFragment.isVisible()) {
                         initial_edit_text = (TextView)getView().findViewById(R.id.initial_message);
+                        textView1 = (TextView) getView().findViewById(R.id.textView1);
+                        textView2 = (TextView) getView().findViewById(R.id.textView2);
 
                         if (!TextUtils.isEmpty(username)){
                             initial_edit_text.setText("Hello, " + username);
                         }
 
+                        if (!TextUtils.isEmpty(name)){
+                            textView1.setText("Name:  " + name);
+                        }
 
-                        Picasso.get().load(avatar_url).placeholder(R.drawable.default_avatar).transform(new CropCircleTransformation() ).resize(200,200).into(image_view_avatar);
+                        if (!TextUtils.isEmpty(email)){
+                            textView2.setText("Email: "+ email);
+                        }
 
+                        if (avatar_url != null && !TextUtils.isEmpty(avatar_url)){
+                            Picasso.get().load(avatar_url).placeholder(R.drawable.default_avatar).transform(new CropCircleTransformation() ).resize(200,200).into(image_view_avatar);
+                        }else{
+                            Picasso.get().load(R.drawable.default_avatar).into(image_view_avatar);
+                        }
 
                         load_settings();
                         SharedPreferencesManager.getInstance(getContext()).setUsername(username);
@@ -132,7 +149,9 @@ public class HomeFragment extends Fragment {
     private String getFileExtension(Uri url) {
         ContentResolver contentResolver = getContext().getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(url));
+        String type = mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(url));
+
+        return type;
     }
 
     @Override
@@ -154,6 +173,20 @@ public class HomeFragment extends Fragment {
                         @Override
                         public void onSuccess(Uri uri) {
                             uploaded_avatar_url = uri.toString();
+
+                            if (avatar_url != null && !TextUtils.isEmpty(avatar_url)){
+                                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(avatar_url);
+                                storageReference.delete().addOnSuccessListener(unused -> {
+                                    Toast.makeText(getContext(), "Delete Old Image successfully", Toast.LENGTH_LONG).show();
+                                }).addOnFailureListener(e -> {
+                                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                    Log.d("IMAGE_DELTE", avatar_url);
+                                    Log.d("IMAGE_DELTE", e.getMessage());
+                                });
+
+                                avatar_url = uploaded_avatar_url;
+                            }
+
                             firestore.collection("users").document(auth.getCurrentUser().getUid()).update("avatar", uploaded_avatar_url);
                             Toast.makeText(getContext(), "Update new Image successfully", Toast.LENGTH_LONG).show();
                         }
@@ -161,15 +194,7 @@ public class HomeFragment extends Fragment {
                 }
             });
 
-            if (avatar_url != null){
-                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(avatar_url);
-                storageReference.delete().addOnSuccessListener(unused -> {
-                    Toast.makeText(getContext(), "Delete Old Image successfully", Toast.LENGTH_LONG).show();
-                }).addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                    Log.d("IMAGE_DELTE", e.getMessage());
-                });
-            }
+
 
         }else {
             Toast.makeText(getContext(), "Try again!", Toast.LENGTH_SHORT).show();
@@ -253,6 +278,9 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
         GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(getContext());
+
+        String user_id = auth.getCurrentUser().getUid();
+
         if(signInAccount != null){
 
             initial_edit_text.setText("Hello, " + signInAccount.getDisplayName());
@@ -260,7 +288,7 @@ public class HomeFragment extends Fragment {
             textView1.setText("Name:  " + signInAccount.getDisplayName());
             textView2.setText("Email: "+signInAccount.getEmail());
             // textView3.setText("getId" + signInAccount.getId() + "\ngetFamilyName: " + signInAccount.getFamilyName() + "\nUID: " + auth.getCurrentUser().getUid());
-            String user_id = auth.getCurrentUser().getUid();
+
             DocumentReference userRef = firestore.collection("users").document(user_id);
             userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -279,6 +307,8 @@ public class HomeFragment extends Fragment {
                     }
                 }
             });
+        }else{
+
         }
 
         return view;
